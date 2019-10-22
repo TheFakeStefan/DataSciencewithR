@@ -1,0 +1,379 @@
+---
+title: "Projektarbeit Stefan Flachsbarth & Martin Haug<br/><br/>Teil 2 - Strukturdaten"
+subtitle: "<br/>Analyse von Wahlergebnissen, Strukturdaten und Presseberichterstattung<br/>Strukturdaten der Bundesrepublik Deutschland aus dem Zeitraum 1990 - 2017"
+author: "<br/><br/>Stefan Flachsbarth, Martin Haug"
+date: "`r Sys.Date()`"
+output:
+  html_document: 
+    fig_height: 8
+    fig_width: 12
+    highlight: tango
+    theme: paper
+    toc: yes
+    toc_depth: 3
+  pdf_document:
+    toc: yes
+    toc_depth: '3'
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(comment = NA)
+knitr::opts_chunk$set(message = FALSE)
+knitr::opts_chunk$set(warning = FALSE)
+```
+
+
+## 3. Strukturdaten - Datenvorbereitung
+
+Die Strukturdaten liegen in Einzeldateien unterschiedlicher Länge vor. Eine Datei umfasst jeweils Beobachtungen zu einem Thema über den Gesamtzeitraum hinweg. Bei der Aufbereitung der Strukturdaten wird intensiv mit Funktionen gearbeitet. Zunächst werden die benötigten R-Pakete geladen. 
+
+#### Laden der benötigten R-Pakete
+
+```{r}
+library(dplyr)
+library(readxl)
+library(readr)
+library(tidyverse)
+library(DBI)
+library(fs)
+library(rstudioapi)
+```
+
+
+### 3.1. Definition von Funktionen
+
+#### Laden der benötigten Hilfsdateien - i.e. Masterdaten der Stadt- und Landkreise
+
+```{r}
+
+# Laden der Masterdaten der Stadt- und Landkreise
+STLAID_Master <- read_excel("FINAL DATA/Masterdata/Stadt-Landkreis_ID.xlsx")
+head(STLAID_Master, 5)
+
+```
+
+#### Definieren der für die Datenvorbereitung notwendigen Funktionen
+
+```{r}
+
+# Definieren einer Funktion, um die verschiedenen Zeichen für fehlende Werte zu ersetzen.
+renamestdf <- function(stdf){
+  stdf[] <- lapply(stdf, function(x) ifelse(x=="-", "", x))
+  stdf[] <- lapply(stdf, function(x) ifelse(x==".", "", x))
+  stdf[] <- lapply(stdf, function(x) ifelse(x=="x", "", x))
+  stdf[] <- lapply(stdf, function(x) ifelse(x=="/", "", x))
+  stdf[] <- lapply(stdf, function(x) ifelse(x=="...", "", x))
+  return(stdf)
+}
+
+# Definieren einer Funktion, um die relevanten Spalten zu extrahieren. 
+transform01 <- function(stdf){
+  stdf <- stdf%>%
+    select(-YearSchluessel)%>%
+    select(-Year)%>%
+    select(-Schluessel)%>%
+    select(-Name)
+  return(stdf)
+}
+
+# Funktion zum Konvertieren string to numeric
+x <- function(x) {
+  as.numeric(gsub(",",".",x))
+}
+
+# Definition weiterer Funktionen zum Umwandeln des Dataframes
+transform02 <- function(stdf){
+  stdfkrz <- stdf%>%
+    renamestdf()%>%
+    transform01()
+  return(stdfkrz)
+}
+
+transform03 <- function(stdf){
+  stdfintro <- stdf%>%
+    select("YearSchluessel", "Year", "Schluessel", "Name")
+  stdfintro$Year <- as.character(stdfintro$Year)
+  return(stdfintro)
+}
+
+transform04 <- function(stdfkrz, stdfintro, length){
+  result <- lapply(stdfkrz[length], x) %>% data.frame()
+  resultstdfin <- add_column(result, stdfintro$YearSchluessel, stdfintro$Year, stdfintro$Schluessel, stdfintro$Name)
+  stdf <- resultstdfin
+  return(stdf)
+}
+
+transform05 <- function(stdf){
+  stdf <- stdf%>%
+    rename("YearSchluessel"="stdfintro$YearSchluessel")%>%
+    rename("Year"="stdfintro$Year")%>%
+    rename("Schluessel"="stdfintro$Schluessel")%>%
+    rename("Name"="stdfintro$Name")
+}
+
+# Definieren einer Funktion, um die aggregierten Werte (Regierungsbezirke, Bundesländer) zu eliminieren.
+`%notin%` <- Negate(`%in%`)
+aggloeschen <- function(stdf){
+  stdf <- filter(stdf, Schluessel %notin% c("01","03","031","032","033","034","04","05","051","053","055","057","059","06","064","065","066","07","071","072","073","08","081","082","083","084","09","091","092","093","094","095","096","097","10","11","12","13","14","141","142","143","145","146","147","15","151","152","153","16"))
+  return(stdf)
+}
+
+# Definieren einer Funktion, um den Code der Stadt Hamburg anzupassen.
+hamburg <- function(stdf){
+  stdf$Schluessel[stdf$Name=="Hamburg"] = "02000"
+  stdf$YearSchluessel[stdf$Name=="Hamburg" & stdf$Year=="1990"] = "199002000"
+  stdf$YearSchluessel[stdf$Name=="Hamburg" & stdf$Year=="1991"] = "199102000"
+  stdf$YearSchluessel[stdf$Name=="Hamburg" & stdf$Year=="1992"] = "199202000"
+  stdf$YearSchluessel[stdf$Name=="Hamburg" & stdf$Year=="1993"] = "199302000"
+  stdf$YearSchluessel[stdf$Name=="Hamburg" & stdf$Year=="1994"] = "199402000"
+  stdf$YearSchluessel[stdf$Name=="Hamburg" & stdf$Year=="1995"] = "199502000"
+  stdf$YearSchluessel[stdf$Name=="Hamburg" & stdf$Year=="1996"] = "199602000"
+  stdf$YearSchluessel[stdf$Name=="Hamburg" & stdf$Year=="1997"] = "199702000"
+  stdf$YearSchluessel[stdf$Name=="Hamburg" & stdf$Year=="1998"] = "199802000"
+  stdf$YearSchluessel[stdf$Name=="Hamburg" & stdf$Year=="1999"] = "199902000"
+  stdf$YearSchluessel[stdf$Name=="Hamburg" & stdf$Year=="2000"] = "200002000"
+  stdf$YearSchluessel[stdf$Name=="Hamburg" & stdf$Year=="2001"] = "200102000"
+  stdf$YearSchluessel[stdf$Name=="Hamburg" & stdf$Year=="2002"] = "200202000"
+  stdf$YearSchluessel[stdf$Name=="Hamburg" & stdf$Year=="2003"] = "200302000"
+  stdf$YearSchluessel[stdf$Name=="Hamburg" & stdf$Year=="2004"] = "200402000"
+  stdf$YearSchluessel[stdf$Name=="Hamburg" & stdf$Year=="2005"] = "200502000"
+  stdf$YearSchluessel[stdf$Name=="Hamburg" & stdf$Year=="2006"] = "200602000"
+  stdf$YearSchluessel[stdf$Name=="Hamburg" & stdf$Year=="2007"] = "200702000"
+  stdf$YearSchluessel[stdf$Name=="Hamburg" & stdf$Year=="2008"] = "200802000"
+  stdf$YearSchluessel[stdf$Name=="Hamburg" & stdf$Year=="2009"] = "200902000"
+  stdf$YearSchluessel[stdf$Name=="Hamburg" & stdf$Year=="2010"] = "201002000"
+  stdf$YearSchluessel[stdf$Name=="Hamburg" & stdf$Year=="2011"] = "201102000"
+  stdf$YearSchluessel[stdf$Name=="Hamburg" & stdf$Year=="2012"] = "201202000"
+  stdf$YearSchluessel[stdf$Name=="Hamburg" & stdf$Year=="2013"] = "201302000"
+  stdf$YearSchluessel[stdf$Name=="Hamburg" & stdf$Year=="2014"] = "201402000"
+  stdf$YearSchluessel[stdf$Name=="Hamburg" & stdf$Year=="2015"] = "201502000"
+  stdf$YearSchluessel[stdf$Name=="Hamburg" & stdf$Year=="2016"] = "201602000"
+  stdf$YearSchluessel[stdf$Name=="Hamburg" & stdf$Year=="2017"] = "201702000"
+  stdf$YearSchluessel[stdf$Name=="Hamburg" & stdf$Year=="2018"] = "201802000"
+  return(stdf)
+}
+
+# Definieren einer Funktion, um die doppelt vorhandenen Landkreise zu eliminieren.
+altekreise <- function(stdf){
+  stdf <- filter(stdf, Schluessel %notin% c("3152","14161","14166","14167","14171","14173","14177","14178","14181","14182","14188","14191","14193","14262","14263","14264","14272","14280","14284","14285","14286","14287","14290","14292","14365","14374","14375","14379","14383","14389","15101","15151","15153","15154","15159","15171","15202","15256","15260","15261","15265","15266","15268","15303","15352","15355","15357","15358","15362","15363","15364","15367","15369","15370","05334002"))
+  return(stdf)
+}
+
+# Definieren einer Funktion, um die Strukturdaten mit den Stadt-/Landkreis-Masterdaten zu verknüpfen.
+lkrmaster <- function(stdf){
+  stdf02 <- left_join(stdf, STLAID_Master, by=c("Schluessel" = "LKR_NR"))
+  stdf02$'Stadt-/Landkreis' <- stdf02$'LKR_NAME'
+  stdfin <- select(stdf02, -'Name', -'LKR_NAME', -'LAND_NR')
+  return(stdfin)
+}
+
+# Zusammenführen aller Teilfunktionen zu einer Gesamtfunktion
+strukturprep <- function(stdf, length){
+  stdfkrz <- transform02(stdf)
+  stdfintro <- transform03(stdf)
+  stdf <- transform04(stdfkrz,stdfintro)
+  stdf <- transform05(stdf)
+  stdf <- aggloeschen(stdf)
+  stdf <- hamburg(stdf)
+  stdf <- altekreise(stdf)
+  stdf <- lkrmaster(stdf)
+  return(stdf)
+}
+
+```
+
+
+### 3.2. Anwenden der Funktionen auf die Strukturdaten
+
+```{r}
+
+# Anwenden der Datenvorbereitungsfunktion auf alle Datensätze
+
+stdf <- read_excel("FINAL DATA/Strukturdaten/T01_Gebiet-Flaeche.xlsx")
+STT0101_GebietFlaeche <-strukturprep(stdf,"1:4")
+write.csv(STT0101_GebietFlaeche, file="FINAL DATA/Strukturdaten_clean/STT0101_GebietFlaeche.csv")
+stdf <- read_excel("FINAL DATA/Strukturdaten/T02_Bevoelkerung-Alter.xlsx")
+STT0201_BevAlter <-strukturprep(stdf,"1:5")
+write.csv(STT0201_BevAlter, file="FINAL DATA/Strukturdaten_clean/STT0201_BevAlter.csv")
+stdf <- read_excel("FINAL DATA/Strukturdaten/T02_Bevoelkerungsstand.xlsx")
+STT0202_BevStand <-strukturprep(stdf,"1:7")
+write.csv(STT0202_BevStand, file="FINAL DATA/Strukturdaten_clean/STT0202_BevStand.csv")
+stdf <- read_excel("FINAL DATA/Strukturdaten/T02_Bevoelkerung-Wanderung.xlsx")
+STT0203_BevWanderung <-strukturprep(stdf,"1:2")
+write.csv(STT0203_BevWanderung, file="FINAL DATA/Strukturdaten_clean/STT0203_BevWanderung.csv")
+stdf <- read_excel("FINAL DATA/Strukturdaten/T04_Gewerbeanmeldungen.xlsx")
+STT0401_Gewerbeanmeldungen <-strukturprep(stdf,"1")
+write.csv(STT0401_Gewerbeanmeldungen, file="FINAL DATA/Strukturdaten_clean/STT0401_Gewerbeanmeldungen.csv")
+stdf <- read_excel("FINAL DATA/Strukturdaten/T04_Insolvenzen.xlsx")
+STT0402_Insolvenzen <-strukturprep(stdf,"1")
+write.csv(STT0402_Insolvenzen, file="FINAL DATA/Strukturdaten_clean/STT0402_Insolvenzen.csv")
+stdf <- read_excel("FINAL DATA/Strukturdaten/T06_Arbeitslose-Gruppen.xlsx")
+STT0601_ALGruppen <-strukturprep(stdf,"1:4")
+write.csv(STT0601_ALGruppen, file="FINAL DATA/Strukturdaten_clean/STT0601_ALGruppen.csv")
+stdf <- read_excel("FINAL DATA/Strukturdaten/T06_Arbeitslosenquote.xlsx")
+STT0602_ALQuote <-strukturprep(stdf,"1:5")
+write.csv(STT0602_ALQuote, file="FINAL DATA/Strukturdaten_clean/STT0602_ALQuote.csv")
+stdf <- read_excel("FINAL DATA/Strukturdaten/T06_Beschaeftigungsquote.xlsx")
+STT0603_BeschQuote <-strukturprep(stdf,"1")
+write.csv(STT0603_BeschQuote, file="FINAL DATA/Strukturdaten_clean/STT0603_BeschQuote.csv")
+stdf <- read_excel("FINAL DATA/Strukturdaten/T06_Erwerbstaetige.xlsx")
+STT0604_Erwerbstaetige <-strukturprep(stdf,"1:8")
+write.csv(STT0604_Erwerbstaetige, file="FINAL DATA/Strukturdaten_clean/STT0604_Erwerbstaetige.csv")
+stdf <- read_excel("FINAL DATA/Strukturdaten/T09_Bruttoentgelte.xlsx")
+STT0901_Bruttoentgelte <-strukturprep(stdf,"1")
+write.csv(STT0901_Bruttoentgelte, file="FINAL DATA/Strukturdaten_clean/STT0901_Bruttoentgelte.csv")
+stdf <- read_excel("FINAL DATA/Strukturdaten/T09_Investitionen.xlsx")
+STT0902_Investitionen <-strukturprep(stdf,"1")
+write.csv(STT0902_Investitionen, file="FINAL DATA/Strukturdaten_clean/STT0902_Investitionen.csv")
+stdf <- read_excel("FINAL DATA/Strukturdaten/T10_Bauen-Wohnen.xlsx")
+STT1001_BauenWohnen <-strukturprep(stdf,"1")
+write.csv(STT1001_BauenWohnen, file="FINAL DATA/Strukturdaten_clean/STT1001_BauenWohnen.csv")
+stdf <- read_excel("FINAL DATA/Strukturdaten/T12_PKW-Dichte.xlsx")
+STT1201_PKWDichte <-strukturprep(stdf,"1")
+write.csv(STT1201_PKWDichte, file="FINAL DATA/Strukturdaten_clean/STT1201_PKWDichte.csv")
+stdf <- read_excel("FINAL DATA/Strukturdaten/T15_Einkuenfte-Steuerpflichtiger.xlsx")
+STT1501_EinkuenfteSteuer <-strukturprep(stdf,"1")
+write.csv(STT1501_EinkuenfteSteuer, file="FINAL DATA/Strukturdaten_clean/STT1501_EinkuenfteSteuer.csv")
+stdf <- read_excel("FINAL DATA/Strukturdaten/T15_Verfuegbares-Einkommen.xlsx")
+STT1502_VerfEinkommen <-strukturprep(stdf,"1")
+write.csv(STT1502_VerfEinkommen, file="FINAL DATA/Strukturdaten_clean/STT1502_VerfEinkommen.csv")
+stdf <- read_excel("FINAL DATA/Strukturdaten/T16_BIP.xlsx")
+STT1601_BIP <-strukturprep(stdf,"1:3")
+write.csv(STT1601_BIP, file="FINAL DATA/Strukturdaten_clean/STT1601_BIP.csv")
+stdf <- read_excel("FINAL DATA/Strukturdaten/I01_Gender-Arbeitslosigkeit.xlsx")
+STI0101_GenderAL <-strukturprep(stdf,"1:2")
+write.csv(STI0101_GenderAL, file="FINAL DATA/Strukturdaten_clean/STI0101_GenderAL.csv")
+stdf <- read_excel("FINAL DATA/Strukturdaten/I01_Gender-Beschaeftigung.xlsx")
+STI0102_GenderBeschaeftigung <-strukturprep(stdf,"1:3")
+write.csv(STI0102_GenderBeschaeftigung, file="FINAL DATA/Strukturdaten_clean/STI0102_GenderBeschaeftigung.csv")
+stdf <- read_excel("FINAL DATA/Strukturdaten/I01_Gender-Bildung.xlsx")
+STI0103_GenderBildung <-strukturprep(stdf,"1:3")
+write.csv(STI0103_GenderBildung, file="FINAL DATA/Strukturdaten_clean/STI0103_GenderBildung.csv")
+stdf <- read_excel("FINAL DATA/Strukturdaten/I01_Gender-Grundsicherung.xlsx")
+STI0104_GenderGrundsich <-strukturprep(stdf,"1:3")
+write.csv(STI0104_GenderGrundsich, file="FINAL DATA/Strukturdaten_clean/STI0104_GenderGrundsich.csv")
+stdf <- read_excel("FINAL DATA/Strukturdaten/I02_Nachh-Alterung.xlsx")
+STI0201_NachhAlterung <-strukturprep(stdf,"1:3")
+write.csv(STI0201_NachhAlterung, file="FINAL DATA/Strukturdaten_clean/STI0201_NachhAlterung.csv")
+stdf <- read_excel("FINAL DATA/Strukturdaten/I02_Nachh-Armutsgefaehrdung.xlsx")
+STI0202_NachhArmut <-strukturprep(stdf,"1")
+write.csv(STI0202_NachhArmut, file="FINAL DATA/Strukturdaten_clean/STI0202_NachhArmut.csv")
+stdf <- read_excel("FINAL DATA/Strukturdaten/I02_Nachh-Bildung.xlsx")
+STI0203_NachhBildung <-strukturprep(stdf,"1:2")
+write.csv(STI0203_NachhBildung, file="FINAL DATA/Strukturdaten_clean/STI0203_NachhBildung.csv")
+stdf <- read_excel("FINAL DATA/Strukturdaten/I02_Nachh-BIP-Kopf.xlsx")
+STI0204_NachhBIPKopf <-strukturprep(stdf,"1")
+write.csv(STI0204_NachhBIPKopf, file="FINAL DATA/Strukturdaten_clean/STI0204_NachhBIPKopf.csv")
+stdf <- read_excel("FINAL DATA/Strukturdaten/I02_Nachh-BIP-Stunde.xlsx")
+STI0205_NachhBIPStunde <-strukturprep(stdf,"1")
+write.csv(STI0205_NachhBIPStunde, file="FINAL DATA/Strukturdaten_clean/STI0205_NachhBIPStunde.csv")
+stdf <- read_excel("FINAL DATA/Strukturdaten/I02_Nachh-Jugendarbeitslosigkeit.xlsx")
+STI0206_NachhJugendAL <-strukturprep(stdf,"1")
+write.csv(STI0206_NachhJugendAL, file="FINAL DATA/Strukturdaten_clean/STI0206_NachhJugendAL.csv")
+stdf <- read_excel("FINAL DATA/Strukturdaten/I02_Nachh-Wanderung.xlsx")
+STI0207_NachhWanderung <-strukturprep(stdf,"1")
+write.csv(STI0207_NachhWanderung, file="FINAL DATA/Strukturdaten_clean/STI0207_NachhWanderung.csv")
+stdf <- read_excel("FINAL DATA/Strukturdaten/I03_Soz-Grundsicherung-Alter.xlsx")
+STI0301_SozGrundsAlter <-strukturprep(stdf,"1:4")
+write.csv(STI0301_SozGrundsAlter, file="FINAL DATA/Strukturdaten_clean/STI0301_SozGrundsAlter.csv")
+stdf <- read_excel("FINAL DATA/Strukturdaten/I03_Soz-Mindestsicherung.xlsx")
+STI0302_SozMindestsich <-strukturprep(stdf,"1")
+write.csv(STI0302_SozMindestsich, file="FINAL DATA/Strukturdaten_clean/STI0302_SozMindestsich.csv")
+stdf <- read_excel("FINAL DATA/Strukturdaten/I04_Zensus-Bevoelkerung.xlsx")
+STI0401_ZensusBevoelkerung <-strukturprep(stdf,"1:7")
+write.csv(STI0401_ZensusBevoelkerung, file="FINAL DATA/Strukturdaten_clean/STI0401_ZensusBevoelkerung.csv")
+stdf <- read_excel("FINAL DATA/Strukturdaten/I04_Zensus-Erwerbstaetigkeit.xlsx")
+STI0402_ZensusErwerb <-strukturprep(stdf,"1:4")
+write.csv(STI0402_ZensusErwerb, file="FINAL DATA/Strukturdaten_clean/STI0402_ZensusErwerb.csv")
+stdf <- read_excel("FINAL DATA/Strukturdaten/I04_Zensus-Haushalte.xlsx")
+STI0403_ZensusHaushalte <-strukturprep(stdf,"1:3")
+write.csv(STI0403_ZensusHaushalte, file="FINAL DATA/Strukturdaten_clean/STI0403_ZensusHaushalte.csv")
+stdf <- read_excel("FINAL DATA/Strukturdaten/I04_Zensus-Wohnen-Gebaeude.xlsx")
+STI0404_ZensusWohnenGebaeude <-strukturprep(stdf,"1:5")
+write.csv(STI0404_ZensusWohnenGebaeude, file="FINAL DATA/Strukturdaten_clean/STI0404_ZensusWohnenGebaeude.csv")
+
+```
+
+
+### 3.3. Laden der Strukturdaten in die PostgreSQL-Datenbank
+
+### Definition der benötigten Funktionen
+
+```{r}
+
+# ParseFile-Funktion
+parseFile <- function(file) {
+  fileext <- path_ext(basename(file))
+
+  if (fileext == "csv") { 
+    content <- read.csv(file, header = TRUE, sep = ";", fileEncoding = "ISO-8859-13")
+  }
+  else if (fileext == "xlsx") {
+    content <- read_excel(file, 1, col_names = TRUE)
+  }
+  
+  result <- list(
+  "content" = content,
+  "file_name" = file %>% basename() %>% path_ext_remove %>% tolower
+  )
+
+  WriteMyDataToSQL(result$file_name, result$content)
+  
+  return(result)
+}
+
+# ParseFolder-Funktion
+parseFolder <- function(path, pattern) {
+  # Einlesen der Filenames die 'path' und 'pattern' entsprechen
+  files <- list.files(path = path, pattern = pattern, recursive = TRUE, full.names = TRUE)
+  
+  # Anlegen einer Liste für die Files
+  filesAsList <- lapply(files, parseFile)
+  
+  return(filesAsList)
+}
+
+# WriteMyDataToSQL-Funktion
+WriteMyDataToSQL <- function(table_name, table_content) {
+  # Verbindung initialisieren
+  con <- dbConnect(RPostgreSQL::PostgreSQL(),
+    host = 'hdm-sql.think-data.de', 
+    dbname = 'postgres',
+    user = 'postgres',
+    password = '%%CENSORED%%'
+    # Diese Vorgehensweise ist sicherer. 
+    # password = rstudioapi::askForPassword("Database password")
+    )
+  
+  # Daten in SQL-Datenbank schreiben
+  dbWriteTable(con, table_name, table_content, overwrite = TRUE)
+
+  # Verbindung lösen
+  dbDisconnect(con)
+}
+
+```
+
+#### Funktionen zum Schreiben der Daten in die Datenbank ausführen
+
+```{r}
+
+# Schreiben der Masterdaten in die Datenbank
+output <- parseFolder("FINAL DATA/Masterdata - Azure", ".xlsx$")
+
+# Schreiben der Strukturdaten in die Datenbank
+output <- parseFolder("FINAL DATA/Strukturdaten_clean2",  ".csv$")
+
+```
+
+
+### 3.4. Überprüfung der Ergebnisse in PostgreSQL
+
+Ein Blick in die PostgreSQL-Datenbank zeigt, dass alle Strukturdaten korrekt und vollständig in die SQL-Datenbank geschrieben wurden. 
+
+
+```{r pressure, echo=FALSE, fig.cap="A caption", out.width = '100%'}
+knitr::include_graphics("https://raw.githubusercontent.com/TheFakeStefan/DataSciencewithR/master/images/presentation/Image_strukturdaten.PNG")
+```
+
