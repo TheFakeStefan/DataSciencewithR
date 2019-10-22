@@ -146,7 +146,12 @@ ggplot(stuttgart.long, aes(x=variable,y=value,fill=factor(WKRNAME)))+
                       labels=c("Stuttgart I", "Stuttgart II"))+
   xlab("Partei")+ylab("Wählerstimmen")+
   theme_classic(base_size=7) +
-  labs(title="Erstwählerstimmen in den beiden Stuttgarter Wahlkreisen")
+  labs(title="Erstwählerstimmen in den beiden Stuttgarter Wahlkreisen") +
+  theme(text = element_text(size=12),
+        plot.background = element_rect(fill = "#FAFAFA"),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        legend.title = element_blank())
 
 ```
 
@@ -312,7 +317,13 @@ glimpse(ostwahl)
 ggplot(ostwahl, aes(x=Wahljahr, y=value, color=variable)) +
   geom_line() +
   theme_classic() +
-  expand_limits(y=0)
+  expand_limits(y=0) +
+  labs(title="Wahlergebnisse in Ostdeutschland 1990 - 2017", x="Wahljahr", y="Anteil Zweitstimmen") +
+  theme(text = element_text(size=12),
+        plot.background = element_rect(fill = "#FAFAFA"),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        legend.title = element_blank())
 
 ```
 
@@ -748,7 +759,7 @@ head(verfeinkommen_all, 5)
 ggplot(verfeinkommen_all, aes(x=Year, y=Verf_Einkommen, color=OstWest)) +
   geom_line() +
   theme_classic() +
-  labs(title="Verfügbare Einkommen (Ost/West)", subtitle="Zeitraum 2002 - 2016", x="", y="")
+  labs(title="Verfügbare Einkommen in EUR (Ost/West)", subtitle="Zeitraum 2002 - 2016", x="", y="")
 
 ```
 
