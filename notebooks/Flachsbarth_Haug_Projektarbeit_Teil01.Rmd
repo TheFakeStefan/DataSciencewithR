@@ -1,0 +1,778 @@
+---
+title: "Projektarbeit Stefan Flachsbarth & Martin Haug<br/><br/>Teil 1 - Einleitung & Wahldaten"
+subtitle: "<br/>Analyse von Wahlergebnissen, Strukturdaten und Presseberichterstattung<br/>Bundestagswahlen im Zeitraum 1990 - 2017"
+author: "<br/><br/>Stefan Flachsbarth, Martin Haug"
+date: "`r Sys.Date()`"
+output:
+  html_document: 
+    fig_height: 8
+    fig_width: 12
+    highlight: tango
+    theme: paper
+    toc: yes
+    toc_depth: 2
+  pdf_document:
+    toc: yes
+    toc_depth: '2'
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(comment = NA)
+knitr::opts_chunk$set(message = FALSE)
+knitr::opts_chunk$set(warning = FALSE)
+```
+
+
+## 1. Einleitung
+
+Diese Projektarbeit baut auf den Vorarbeiten auf, die wir gemeinsam im Modul 'Programming for Data Science' im Sommer 2019 erbracht haben. Wie in jenem Projekt beschäftigen wir uns auch diesmal mit den **Ergebnissen der Bundestagswahlen aus dem Zeitraum 1990 bis 2017**. Die Daten liegen im Excel-Format auf Ebene der einzelnen Wahlkreise vor, können jedoch auch aggregiert werden auf Ebene von Bundesländern. Quelle der Daten ist die offizielle Seite des Bundeswahlleiters: https://www.bundeswahlleiter.de/bundestagswahlen/2017/ergebnisse.html.
+
+Neben den Ergebnissen der Bundestagwahlen werden auch **Strukturdaten aus demselben Zeitraum** betrachtet. Die Quelle dieser Strukturdaten ist das Deutsche Statistische Bundesamt: https://www-genesis.destatis.de/gis/genView?GenMLURL=https://www-genesis.destatis.de/regatlas/AI-Z4-2011.xml&CONTEXT=REGATLAS01. Die Strukturdaten beziehen sich auf verschiedene Themenbereiche, unter anderem Bevölkerungsentwicklung, Erwerbstätigkeit, Einkommen, Arbeitslosigkeit, Bildung Wohnen. Die Strukturdaten liegen auf Ebene von Stadt- und Landkreisen vor. Da sich Wahlkreise und Stadt- bzw. Landkreise im Regelfall decken, können Wahl- und Strukturdaten gut miteinander verbunden werden. Verwendet wird dazu die im Rahmen des Vorprojekts erstellte Mapping-Tabelle. 
+
+Neu im Rahmen dieser Projektarbeit ist die **Auswertung der Presseberichte aus dem betrachteten Zeitraum**. In die Analyse aufgenommen wurden Berichte der bundesweiten Zeitungen sowie der großen Regionalzeitungen, die in der WISO-Datenbank unter https://www.wiso-net.de/dosearch/:3:ALLEQUELLEN-106_:3:PRESSE verfügbar sind. Berücksichtigt wurden dabei jeweils die letzen zwei Monate vor dem Wahltermin. 
+
+
+### 1.1. Vorgehensweise
+
+Die Arbeit strukturiert sich folgendermaßen:
+
+* Laden und Aufbereitung der Wahldaten, Einlesen in SQL-Datenbank
+* Laden und Aufbereitung der Strukturdaten, Einlesen in SQL-Datenbank
+* Laden und Aufbereitung der Presseberichte, Einlesen in SQL-Datenbank
+* Deskriptive Statistik der Wahl- und Strukturdaten: Verteilungsmuster, Trends im Zeitverlauf
+* Explorative Statistik auf Basis ausgewählter Segmente der Wahl-, Strukturdaten sowie der Presseberichte - inclusive Hypothesentests, Korrelationsanalysen
+* Datenvisualisierung mit Landkarten
+* Verschiedene Auswertungen des Textmining und der Sentiment-Analyse inclusive Visualisierungen
+* Interaktive Visualisierungen mit shiny
+* Visualisierungen in Elasticsearch
+* Eine Interpretation der Ergebnisse findet an den entsprechenden Stellen in allen Teilabschnitten der Arbeit statt. 
+
+
+### 1.2. Zielsetzung der Arbeit
+
+Nach unserer Interpretation besteht die Zielsetzung der Arbeit vor allem in folgenden Punkten:
+
+* Anwendung der im Rahmen des Studienmoduls 'Programming Languages for Data Science' gelernten Inhalte anwenden
+* Arbeit mit SQL-Datenbanken und SQL-Queries
+* Laden und Aufbereiten von Daten in R
+* Nutzung verschiedener R-Pakete zur Datenaufbereitung und Visualisierung
+* Arbeit mit Funktionen und Iterationen
+* Unterschiede in der Datenbearbeitung mit Python und mit R verstehen und anwenden
+* Auswertungen im Rahmen der deskriptiven und explorativen Statistik
+* Verknüpfung von Daten mit Join-Funktionen
+* Visualisierung mit Landkarten
+* Visualisierung mit interaktiven Grafiken
+* Exploration weiterer, nicht im Kurs explizit behandelter Inhalte
+* Interpretation der Daten und der Ergebnisse
+
+
+```{r}
+# Laden der benötigten R-Pakete
+library(dplyr)
+library(readxl)
+library(readr)
+library(tidyverse)
+library(DBI)
+library(fs)
+library(rstudioapi)
+```
+
+***
+
+## 2. Daten der Bundestagswahlen 1990 bis 2017 - Datenvorbereitung
+
+### 2.1. Datenimport
+
+#### Vorbemerkung zur Data Preparation
+
+Vor dem Hochladen der Daten in R Studio wurden manuell folgende Arbeitsschritte vorgenommen:
+
+* Herunterladen der Einzeldateien
+* Erstellen von Masterdaten, i.e. Übersichten aller Wahlkreise (mit ID), aller Stadt- und Landkreise (mit ID), Mapping-Tabelle 'Wahlkreise : Stadt- und Landkreise' mit eindeutiger Zuordnung (Vereinfachung der realen Situation)
+* Vereinheitlichung der Wahlkreisnummern (da sich deren IDs im Lauf der Jahre geändert haben). Die IDs der Stadt- und Landkreise waren im untersuchten Zeitraum stabil.
+
+#### Ergebnisse der Wahl 2017: Laden der als Excel-Datei vorliegenden Wahlergebnisse in R Studio
+
+Die Vorgehensweise der Datenbearbeitung wird zunächst **am Beispiel der Bundestagwahl 2017 im Detail ausgearbeitet**. Im Anschluss werden die **einzelnen Arbeitsschritte mit Funktionen** dargestellt und auf die weiteren Wahlen angewendet.
+
+#### Einlesen und Anzeige der Daten
+
+```{r}
+
+df01_2017 <- read_excel("C:/Weiterbildung/HdM/Projektarbeit/FINAL DATA/Wahldaten/BTWA2017.xlsx")
+head(df01_2017)
+
+```
+
+### 2.2. Datenvorbereitung
+
+In diesem Abschnitt werden folgende Arbeitsschritte behandelt:
+
+* Ergänzen von Informationen durch Einfügen weiterer Spalten
+* Elimination nicht benötigter Spalten und Zeilen
+* Umformungen und Umrechnungen
+* Berechnung weiterer Kennzahlen
+* Konsolidierung von Spalten und Zeilen
+
+#### Eine Spalte für 'Wahljahr' wird ergänzt, mit der entsprechenden Information befüllt und das Ergebnis überprüft.
+
+```{r}
+
+df01_2017$Wahljahr <- "2017"
+head(df01_2017,5)
+
+```
+
+#### Kleinstparteien aus Datensatz entfernen
+
+Bei der Auswertung werden lediglich die aktuell im Bundestag vertretenen Parteien berücksichtigt. Die anderen Parteien, insbesondere **Parteien, die nur in wenigen Wahlkreisen antreten, werden aus dem Datensatz gelöscht**. Anschließend werden die Namen der Spalten vereinfacht. 
+
+```{r}
+
+# Reduktion auf wenige, größere Parteien
+df01_2017 <- tbl_df(df01_2017[c("Nr", "Wahlkreis", "Bundesland", "Wahljahr", "WB1-WJ", "W1-WJ", "UNG1-WJ", "UNG2-WJ", "GÜL1-WJ", "GÜL2-WJ", "CDU1", "CDU2", "SPD1", "SPD2", "LIN1", "LIN2", "GRÜ1", "GRÜ2", "CSU1", "CSU2", "FDP1", "FDP2", "AFD1", "AFD2")])
+
+# Vereinfachung der Spaltennamen
+df01_2017 <- df01_2017%>%
+  rename(WB1=`WB1-WJ`)%>%
+  rename(W1=`W1-WJ`)%>%
+  rename(UNG1=`UNG1-WJ`)%>%
+  rename(UNG2=`UNG2-WJ`)%>%
+  rename(GUEL1=`GÜL1-WJ`)%>%
+  rename(GUEL2=`GÜL2-WJ`)%>%
+  rename(GRU1=`GRÜ1`)%>%
+  rename(GRU2=`GRÜ2`)
+
+# Überprüfung der Ergebnisse
+head(df01_2017, 5)
+
+```
+
+#### Ersetzen fehlender Werte durch '0'
+
+Für die folgenden Arbeitsschritte ist es wichtig, dass die **'NA' bzw. 'NULL' Werte in einigen Zellen / Spalten durch '0' ersetzt** werden. Die im weiteren folgenden Berechnungen lassen sich dann ohne Schwierigkeiten umsetzen. 
+
+```{r}
+
+# Ersetzen fehlender Werte durch '0'
+df01_2017 <- df01_2017%>%
+  mutate(CDU1=replace_na(CDU1, 0))%>%
+  mutate(CDU2=replace_na(CDU2, 0))%>%
+  mutate(CSU1=replace_na(CSU1, 0))%>%
+  mutate(CSU2=replace_na(CSU2, 0))%>%
+  mutate(SPD1=replace_na(SPD1, 0))%>%
+  mutate(SPD2=replace_na(SPD2, 0))%>%
+  mutate(LIN1=replace_na(LIN1, 0))%>%
+  mutate(LIN2=replace_na(LIN2, 0))%>%
+  mutate(GRU1=replace_na(GRU1, 0))%>%
+  mutate(GRU2=replace_na(GRU2, 0))%>%
+  mutate(FDP1=replace_na(FDP1, 0))%>%
+  mutate(FDP2=replace_na(FDP2, 0))%>%
+  mutate(AFD1=replace_na(AFD1, 0))%>%
+  mutate(AFD2=replace_na(AFD2, 0))%>%
+  mutate(WB1=replace_na(WB1, 0))%>%
+  mutate(W1=replace_na(W1, 0))%>%
+  mutate(UNG1=replace_na(UNG1, 0))%>%
+  mutate(UNG2=replace_na(UNG2, 0))%>%
+  mutate(GUEL1=replace_na(GUEL1, 0))%>%
+  mutate(GUEL2=replace_na(GUEL2, 0))
+
+# Überprüfung der Ergebnisse
+head(df01_2017, 10)
+
+```
+
+#### Anpassung der Datentypen
+
+Zahlreiche Spalten des Datensatzes liegen im Textformat vor. Für die weitere Datenbearbeitung müssen die Datentypen in ein **numerisches Format** gebracht werden (integer oder double).
+
+```{r}
+
+# Umwandlung verschiedener Spalten in numerischen Datentyp
+df01_2017$WB1 <- as.integer(df01_2017$WB1)
+df01_2017$W1 <- as.integer(df01_2017$W1)
+df01_2017$UNG1 <- as.integer(df01_2017$UNG1)
+df01_2017$UNG2 <- as.integer(df01_2017$UNG2)
+df01_2017$GUEL1 <- as.integer(df01_2017$GUEL1)
+df01_2017$GUEL2 <- as.integer(df01_2017$GUEL2)
+df01_2017$CDU1 <- as.integer(df01_2017$CDU1)
+df01_2017$CDU2 <- as.integer(df01_2017$CDU2)
+df01_2017$SPD1 <- as.integer(df01_2017$SPD1)
+df01_2017$SPD2 <- as.integer(df01_2017$SPD2)
+df01_2017$LIN1 <- as.integer(df01_2017$LIN1)
+df01_2017$LIN2 <- as.integer(df01_2017$LIN2)
+df01_2017$GRU1 <- as.integer(df01_2017$GRU1)
+df01_2017$GRU2 <- as.integer(df01_2017$GRU2)
+df01_2017$CSU1 <- as.integer(df01_2017$CSU1)
+df01_2017$CSU2 <- as.integer(df01_2017$CSU2)
+df01_2017$FDP1 <- as.integer(df01_2017$FDP1)
+df01_2017$FDP2 <- as.integer(df01_2017$FDP2)
+df01_2017$AFD1 <- as.integer(df01_2017$AFD1)
+df01_2017$AFD2 <- as.integer(df01_2017$AFD2)
+
+# Überprüfung der Ergebnisse
+head(df01_2017, 5)
+
+```
+
+#### Ergänzung einer Spalte 'Wahlbeteiligung' und Berechnung der Wahlbeteiligung für alle Wahlkreise
+
+```{r}
+
+# Ergänzung und Berechnung einer weiteren Spalte 'Wahlbeteiligung'
+df01_2017$Wahlbeteiligung <- round(df01_2017$W1/df01_2017$WB1,2)
+head(df01_2017, 5)
+
+```
+
+#### Berechnung der prozentualen Wahlergebnisse
+
+Ergänzung von weiteren Spalten, in denen die prozentualen Ergebnisse der Parteien dokumentiert werden. **Berechnung der prozentualen Ergebnisse aller Parteien für die Zweitstimmen**. Rundung auf zwei Nachkommastellen. Überprüfung der Ergebnisse.
+
+```{r}
+
+# Ergänzung und Berechnung einer weiterer Spalten für die prozentuale Darstellung der Zweitstimmenergebnisse
+df01_2017$CDUPZ <- round(df01_2017$CDU2/df01_2017$W1, 2)
+df01_2017$SPDPZ <- round(df01_2017$SPD2/df01_2017$W1, 2)
+df01_2017$LINPZ <- round(df01_2017$LIN2/df01_2017$W1, 2)
+df01_2017$GRUPZ <- round(df01_2017$GRU2/df01_2017$W1, 2)
+df01_2017$CSUPZ <- round(df01_2017$CSU2/df01_2017$W1, 2)
+df01_2017$FDPPZ <- round(df01_2017$FDP2/df01_2017$W1, 2)
+df01_2017$AFDPZ <- round(df01_2017$AFD2/df01_2017$W1, 2)
+
+# Überprüfung der Ergebnisse
+head(df01_2017, 5)
+
+```
+
+#### Konsolidierung der Daten komplementär aufgestellter Parteien
+
+Die Parteien **'CDU' und 'CSU' sind komplementär aufgestellt**. Ihre Ergebnisse sollen deshalb in einer Spalte namens 'UNION' zusammengeführt werden. 
+
+```{r}
+
+# Ergänzung und Berechnung weiterer Spalten
+df01_2017 <- df01_2017%>%
+  mutate(CDU1=replace_na(CDU1, 0))%>%
+  mutate(CSU1=replace_na(CSU1, 0))%>%
+  mutate(CDU2=replace_na(CDU2, 0))%>%
+  mutate(CSU2=replace_na(CSU2, 0))%>%
+  mutate(UNION1=CDU1+CSU1)%>%
+  mutate(UNION2=CDU2+CSU2)%>%
+  mutate(UNIONPZ=round(UNION2/W1, 2))
+
+# Überprüfung der Ergebnisse
+head(df01_2017, 5)
+
+```
+
+
+### 2.3 Verknüpfung von Wahldaten und Wahlkreis-Masterdaten
+
+Laden der Wahlkreis-Masterdaten. Hintergrund: Einige Wahlkreise haben sehr komplexe Namen oder Namen, die sich im Lauf des Beobachtungszeitraums geändert haben. Auch die Wahlkreis-Nummern haben sich im Lauf der Zeit teilweise geändert. Für die weitere Datenbearbeitung kann dieses sehr hinderlich sein. Deshalb werden die Wahlkreisnamen durch die vereinheitlichten und vereinfachten (auch 'kürzeren') Namen aus der Wahlkreis-Masterdatentabelle ersetzt.
+
+#### Laden der Wahlkreis-Masterdaten und Verbindung mit Wahldaten
+
+```{r}
+
+# Laden der Wahlkreis-Masterdaten
+BTWAKR_Master <- read_excel("C:/Weiterbildung/HdM/Projektarbeit/FINAL DATA/Masterdata/BTWahlkreis_ID.xlsx")
+head(BTWAKR_Master, 5)
+
+# Verknüpfung von Wahl- und Wahlkreis-Masterdaten mit Left-Join
+df02_2017 <- left_join(df01_2017, BTWAKR_Master, by = c("Nr" = "WKR_NR"))
+head(df02_2017, 5)
+
+# Auswahl der Spalten für die finale Version des Datensatzes
+dfin_2017 <- select(df02_2017, "Nr", "WKR_NAME", "Bundesland", "Wahljahr", "Wahlbeteiligung", "UNION1", "UNION2", "UNIONPZ", "SPD1", "SPD2", "SPDPZ", "LIN1", "LIN2", "LINPZ", "GRU1", "GRU2", "GRUPZ", "FDP1", "FDP2", "FDPPZ", "AFD1", "AFD2", "AFDPZ", "CDU1", "CDU2", "CDUPZ", "CSU1", "CSU2", "CSUPZ", "WB1", "W1", "UNG1", "UNG2", "GUEL1", "GUEL2", "LAND_ABK")
+
+# Umbenennung der Spaltennamen
+dfin_2017 <- dfin_2017%>%
+  rename(WKRNR = Nr)%>%
+  rename(WKRNAME = WKR_NAME)%>%
+  rename(LANDABK = LAND_ABK)
+
+# Anpassung der Datentypen für ausgewählte Spalten
+dfin_2017$UNION1 <- as.integer(dfin_2017$UNION1)
+dfin_2017$UNION2 <- as.integer(dfin_2017$UNION2)
+dfin_2017$CDU1 <- as.integer(dfin_2017$CDU1)
+dfin_2017$CDU2 <- as.integer(dfin_2017$CDU2)
+dfin_2017$CSU1 <- as.integer(dfin_2017$CSU1)
+dfin_2017$CSU2 <- as.integer(dfin_2017$CSU2)
+dfin_2017$WKRNR <- as.character(dfin_2017$WKRNR)
+
+# Überprüfung der Ergebnisse
+head(dfin_2017, 5)
+
+```
+
+#### Berechnung der statistischen Verteilungswerte der numerischen Spalten und Rundung der Ergebnisse auf zwei Nachkommastellen
+
+```{r}
+
+summary(dfin_2017)
+
+```
+
+#### Berechnung der Summe der prozentualen Ergebnisse der Parteien
+
+In diesem Schritt wird eine Prüfsumme erstellt, um zu testen, ob die Summe der Zweitstimmenergebnisse annähernd 100% ergibt.
+
+```{r}
+
+# Berechnung der Prüfsumme und Überprüfung der Ergebnisse
+dfin_2017 <- dfin_2017%>%
+  mutate(Check = `UNIONPZ`+`SPDPZ` + `LINPZ` + `GRUPZ` + `FDPPZ` + `AFDPZ`)
+head(dfin_2017,5)
+
+```
+
+
+### 2.4. Sichern der bearbeiteten Wahldaten als CSV-Datei. 
+
+```{r}
+
+# Schreiben der bereinigten Daten in eine CSV-Datei
+write.csv(dfin_2017, file="C:/Weiterbildung/HdM/Projektarbeit/FINAL DATA/Wahldaten_clean/dfin_2017.csv")
+
+```
+
+***
+
+### 2.5. Vorbereitung der Wahldaten von 1990 bis 2013 
+
+#### Erstellung von Funktionen zur schneller Verarbeitung der übrigen Wahldaten
+
+```{r}
+
+# Funktion, um kleinere Parteien aus dem Datensatz zu entfernen
+cleanup01 <- function(df){
+  df <- tbl_df(df[c("Nr", "Wahlkreis", "Bundesland", "Wahljahr", "WB1-WJ", "W1-WJ", "UNG1-WJ", "UNG2-WJ", "GÜL1-WJ", "GÜL2-WJ", "CDU1", "CDU2", "SPD1", "SPD2", "LIN1", "LIN2", "GRÜ1", "GRÜ2", "CSU1", "CSU2", "FDP1", "FDP2", "AFD1", "AFD2")])
+  df <- df%>%
+    rename(WB1=`WB1-WJ`)%>%
+    rename(W1=`W1-WJ`)%>%
+    rename(UNG1=`UNG1-WJ`)%>%
+    rename(UNG2=`UNG2-WJ`)%>%
+    rename(GUEL1=`GÜL1-WJ`)%>%
+    rename(GUEL2=`GÜL2-WJ`)%>%
+    rename(GRU1=`GRÜ1`)%>%
+    rename(GRU2=`GRÜ2`)
+  return(df)
+}
+
+# Funktion, um NULL-Werte zu ersetzen und Datentypen anzupassen
+cleanup02 <- function(df){
+  df <- df%>%
+    mutate(CDU1=replace_na(CDU1, 0))%>%
+    mutate(CDU2=replace_na(CDU2, 0))%>%
+    mutate(CSU1=replace_na(CSU1, 0))%>%
+    mutate(CSU2=replace_na(CSU2, 0))%>%
+    mutate(SPD1=replace_na(SPD1, 0))%>%
+    mutate(SPD2=replace_na(SPD2, 0))%>%
+    mutate(LIN1=replace_na(LIN1, 0))%>%
+    mutate(LIN2=replace_na(LIN2, 0))%>%
+    mutate(GRU1=replace_na(GRU1, 0))%>%
+    mutate(GRU2=replace_na(GRU2, 0))%>%
+    mutate(FDP1=replace_na(FDP1, 0))%>%
+    mutate(FDP2=replace_na(FDP2, 0))%>%
+    mutate(AFD1=replace_na(AFD1, 0))%>%
+    mutate(AFD2=replace_na(AFD2, 0))%>%
+    mutate(WB1=replace_na(WB1, 0))%>%
+    mutate(W1=replace_na(W1, 0))%>%
+    mutate(UNG1=replace_na(UNG1, 0))%>%
+    mutate(UNG2=replace_na(UNG2, 0))%>%
+    mutate(GUEL1=replace_na(GUEL1, 0))%>%
+    mutate(GUEL2=replace_na(GUEL2, 0))
+  df$WB1 <- as.integer(df$WB1)
+  df$W1 <- as.integer(df$W1)
+  df$UNG1 <- as.integer(df$UNG1)
+  df$UNG2 <- as.integer(df$UNG2)
+  df$GUEL1 <- as.integer(df$GUEL1)
+  df$GUEL2 <- as.integer(df$GUEL2)
+  df$CDU1 <- as.integer(df$CDU1)
+  df$CDU2 <- as.integer(df$CDU2)
+  df$SPD1 <- as.integer(df$SPD1)
+  df$SPD2 <- as.integer(df$SPD2)
+  df$LIN1 <- as.integer(df$LIN1)
+  df$LIN2 <- as.integer(df$LIN2)
+  df$GRU1 <- as.integer(df$GRU1)
+  df$GRU2 <- as.integer(df$GRU2)
+  df$CSU1 <- as.integer(df$CSU1)
+  df$CSU2 <- as.integer(df$CSU2)
+  df$FDP1 <- as.integer(df$FDP1)
+  df$FDP2 <- as.integer(df$FDP2)
+  df$AFD1 <- as.integer(df$AFD1)
+  df$AFD2 <- as.integer(df$AFD2)
+  return(df)
+}
+
+# Funktion, um weitere Variablen zu berechnen
+cleanup03 <- function(df){
+  df$Wahlbeteiligung <- round(df$W1/df$WB1,2)
+  df$CDUPZ <- round(df$CDU2/df$W1, 2)
+  df$SPDPZ <- round(df$SPD2/df$W1, 2)
+  df$LINPZ <- round(df$LIN2/df$W1, 2)
+  df$GRUPZ <- round(df$GRU2/df$W1, 2)
+  df$CSUPZ <- round(df$CSU2/df$W1, 2)
+  df$FDPPZ <- round(df$FDP2/df$W1, 2)
+  df$AFDPZ <- round(df$AFD2/df$W1, 2)
+  df <- df%>%
+    mutate(CDU1=replace_na(CDU1, 0))%>%
+    mutate(CSU1=replace_na(CSU1, 0))%>%
+    mutate(CDU2=replace_na(CDU2, 0))%>%
+    mutate(CSU2=replace_na(CSU2, 0))%>%
+    mutate(UNION1=CDU1+CSU1)%>%
+    mutate(UNION2=CDU2+CSU2)%>%
+    mutate(UNIONPZ=round(UNION2/W1, 2))
+  return(df)
+}
+
+# Funktion, um die Wahldaten mit den Wahlkreis-Masterdaten zu verknüpfen
+cleanup04 <- function(df){
+  BTWAKR_Master <- read_excel("C:/Weiterbildung/HdM/Projektarbeit/FINAL DATA/Masterdata/BTWahlkreis_ID.xlsx")
+  BTWAKR_Master$WKR_NR <- as.character(BTWAKR_Master$WKR_NR)
+  df02 <- left_join(df, BTWAKR_Master, by = c("Nr" = "WKR_NR"))
+  dfin <- select(df02, "Nr", "WKR_NAME", "Bundesland", "Wahljahr", "Wahlbeteiligung", "UNION1", "UNION2", "UNIONPZ", "SPD1", "SPD2", "SPDPZ", "LIN1", "LIN2", "LINPZ", "GRU1", "GRU2", "GRUPZ", "FDP1", "FDP2", "FDPPZ", "AFD1", "AFD2", "AFDPZ", "CDU1", "CDU2", "CDUPZ", "CSU1", "CSU2", "CSUPZ", "WB1", "W1", "UNG1", "UNG2", "GUEL1", "GUEL2", "LAND_ABK")
+  dfin <- dfin%>%
+    rename(WKRNR = Nr)%>%
+    rename(WKRNAME = WKR_NAME)%>%
+    rename(LANDABK = LAND_ABK)
+  dfin$UNION1 <- as.integer(dfin$UNION1)
+  dfin$UNION2 <- as.integer(dfin$UNION2)
+  dfin$CDU1 <- as.integer(dfin$CDU1)
+  dfin$CDU2 <- as.integer(dfin$CDU2)
+  dfin$CSU1 <- as.integer(dfin$CSU1)
+  dfin$CSU2 <- as.integer(dfin$CSU2)
+  dfin$WKRNR <- as.character(dfin$WKRNR)
+  return(dfin)
+}
+
+```
+
+
+#### Anwenden der Funktion auf die Wahldaten von 2013
+
+```{r}
+
+# Wahldaten 2013 - Datenvorbereitung
+df <- read_excel("C:/Weiterbildung/HdM/Projektarbeit/FINAL DATA/Wahldaten/BTWA2013.xlsx")
+df$Wahljahr <- "2013"
+dfin_2013 <- df%>%
+  cleanup01()%>%
+  cleanup02()%>%
+  cleanup03()%>%
+  cleanup04()%>%
+  mutate(Check = `UNIONPZ`+`SPDPZ` + `LINPZ` + `GRUPZ` + `FDPPZ` + `AFDPZ`)
+head(dfin_2013,10)
+write.csv(dfin_2013, file="C:/Weiterbildung/HdM/Projektarbeit/FINAL DATA/Wahldaten_clean/dfin_2013.csv")
+
+```
+
+
+#### Erstellen von Funktionsvarianten ohne Berücksichtigung der AFD
+
+Für die Wahljahre 1990 bis 2009 werden **Varianten der Funktionen** benötigt, da die Partei AFD erstmalig 2013 zur Wahl antrat.  
+
+```{r}
+
+# Funktion, um kleinere Parteien zu entfernen
+cleanup01a <- function(df){
+  df <- tbl_df(df[c("Nr", "Wahlkreis", "Bundesland", "Wahljahr", "WB1-WJ", "W1-WJ", "UNG1-WJ", "UNG2-WJ", "GÜL1-WJ", "GÜL2-WJ", "CDU1", "CDU2", "SPD1", "SPD2", "LIN1", "LIN2", "GRÜ1", "GRÜ2", "CSU1", "CSU2", "FDP1", "FDP2")])
+  df <- df%>%
+    rename(WB1=`WB1-WJ`)%>%
+    rename(W1=`W1-WJ`)%>%
+    rename(UNG1=`UNG1-WJ`)%>%
+    rename(UNG2=`UNG2-WJ`)%>%
+    rename(GUEL1=`GÜL1-WJ`)%>%
+    rename(GUEL2=`GÜL2-WJ`)%>%
+    rename(GRU1=`GRÜ1`)%>%
+    rename(GRU2=`GRÜ2`)
+  return(df)
+}
+
+# Funktion, um NULL-Werte zu ersetzen und Datentypen anzupassen
+cleanup02a <- function(df){
+  df <- df%>%
+    mutate(CDU1=replace_na(CDU1, 0))%>%
+    mutate(CDU2=replace_na(CDU2, 0))%>%
+    mutate(CSU1=replace_na(CSU1, 0))%>%
+    mutate(CSU2=replace_na(CSU2, 0))%>%
+    mutate(SPD1=replace_na(SPD1, 0))%>%
+    mutate(SPD2=replace_na(SPD2, 0))%>%
+    mutate(LIN1=replace_na(LIN1, 0))%>%
+    mutate(LIN2=replace_na(LIN2, 0))%>%
+    mutate(GRU1=replace_na(GRU1, 0))%>%
+    mutate(GRU2=replace_na(GRU2, 0))%>%
+    mutate(FDP1=replace_na(FDP1, 0))%>%
+    mutate(FDP2=replace_na(FDP2, 0))%>%
+    mutate(WB1=replace_na(WB1, 0))%>%
+    mutate(W1=replace_na(W1, 0))%>%
+    mutate(UNG1=replace_na(UNG1, 0))%>%
+    mutate(UNG2=replace_na(UNG2, 0))%>%
+    mutate(GUEL1=replace_na(GUEL1, 0))%>%
+    mutate(GUEL2=replace_na(GUEL2, 0))
+  df$WB1 <- as.integer(df$WB1)
+  df$W1 <- as.integer(df$W1)
+  df$UNG1 <- as.integer(df$UNG1)
+  df$UNG2 <- as.integer(df$UNG2)
+  df$GUEL1 <- as.integer(df$GUEL1)
+  df$GUEL2 <- as.integer(df$GUEL2)
+  df$CDU1 <- as.integer(df$CDU1)
+  df$CDU2 <- as.integer(df$CDU2)
+  df$SPD1 <- as.integer(df$SPD1)
+  df$SPD2 <- as.integer(df$SPD2)
+  df$LIN1 <- as.integer(df$LIN1)
+  df$LIN2 <- as.integer(df$LIN2)
+  df$GRU1 <- as.integer(df$GRU1)
+  df$GRU2 <- as.integer(df$GRU2)
+  df$CSU1 <- as.integer(df$CSU1)
+  df$CSU2 <- as.integer(df$CSU2)
+  df$FDP1 <- as.integer(df$FDP1)
+  df$FDP2 <- as.integer(df$FDP2)
+  return(df)
+}
+
+# Funktion, um weitere Variablen zu berechnen
+cleanup03a <- function(df){
+  df$Wahlbeteiligung <- round(df$W1/df$WB1,2)
+  df$CDUPZ <- round(df$CDU2/df$W1, 2)
+  df$SPDPZ <- round(df$SPD2/df$W1, 2)
+  df$LINPZ <- round(df$LIN2/df$W1, 2)
+  df$GRUPZ <- round(df$GRU2/df$W1, 2)
+  df$CSUPZ <- round(df$CSU2/df$W1, 2)
+  df$FDPPZ <- round(df$FDP2/df$W1, 2)
+  df <- df%>%
+    mutate(CDU1=replace_na(CDU1, 0))%>%
+    mutate(CSU1=replace_na(CSU1, 0))%>%
+    mutate(CDU2=replace_na(CDU2, 0))%>%
+    mutate(CSU2=replace_na(CSU2, 0))%>%
+    mutate(UNION1=CDU1+CSU1)%>%
+    mutate(UNION2=CDU2+CSU2)%>%
+    mutate(UNIONPZ=round(UNION2/W1, 2))
+  return(df)
+}
+
+# Funktion, um die Wahldaten mit den Wahlkreis-Masterdaten zu verknüpfen
+cleanup04a <- function(df){
+  BTWAKR_Master <- read_excel("C:/Weiterbildung/HdM/Projektarbeit/FINAL DATA/Masterdata/BTWahlkreis_ID.xlsx")
+  BTWAKR_Master$WKR_NR <- as.character(BTWAKR_Master$WKR_NR)
+  df02 <- left_join(df, BTWAKR_Master, by = c("Nr" = "WKR_NR"))
+  dfin <- select(df02, "Nr", "WKR_NAME", "Bundesland", "Wahljahr", "Wahlbeteiligung", "UNION1", "UNION2", "UNIONPZ", "SPD1", "SPD2", "SPDPZ", "LIN1", "LIN2", "LINPZ", "GRU1", "GRU2", "GRUPZ", "FDP1", "FDP2", "FDPPZ", "CDU1", "CDU2", "CDUPZ", "CSU1", "CSU2", "CSUPZ", "WB1", "W1", "UNG1", "UNG2", "GUEL1", "GUEL2", "LAND_ABK")
+  dfin <- dfin%>%
+    rename(WKRNR = Nr)%>%
+    rename(WKRNAME = WKR_NAME)%>%
+    rename(LANDABK = LAND_ABK)
+  dfin$UNION1 <- as.integer(dfin$UNION1)
+  dfin$UNION2 <- as.integer(dfin$UNION2)
+  dfin$CDU1 <- as.integer(dfin$CDU1)
+  dfin$CDU2 <- as.integer(dfin$CDU2)
+  dfin$CSU1 <- as.integer(dfin$CSU1)
+  dfin$CSU2 <- as.integer(dfin$CSU2)
+  dfin$WKRNR <- as.character(dfin$WKRNR)
+  return(dfin)
+}
+
+```
+
+
+#### Anwenden der Funktion auf die Wahldaten von 2009
+
+```{r}
+
+# Wahldaten 2009 - Datenvorbereitung
+df <- read_excel("C:/Weiterbildung/HdM/Projektarbeit/FINAL DATA/Wahldaten/BTWA2009.xlsx")
+df$Wahljahr <- "2009"
+dfin_2009 <- df%>%
+  cleanup01a()%>%
+  cleanup02a()%>%
+  cleanup03a()%>%
+  cleanup04a()%>%
+  mutate(Check = `UNIONPZ`+`SPDPZ` + `LINPZ` + `GRUPZ` + `FDPPZ`)
+head(dfin_2009,10)
+write.csv(dfin_2009, file="C:/Weiterbildung/HdM/Projektarbeit/FINAL DATA/Wahldaten_clean/dfin_2009.csv")
+
+```
+
+
+#### Anwenden der Funktion auf die Wahldaten von 2005
+
+```{r}
+
+# Wahldaten 2005 - Datenvorbereitung
+df <- read_excel("C:/Weiterbildung/HdM/Projektarbeit/FINAL DATA/Wahldaten/BTWA2005.xlsx")
+df$Wahljahr <- "2005"
+dfin_2005 <- df%>%
+  cleanup01a()%>%
+  cleanup02a()%>%
+  cleanup03a()%>%
+  cleanup04a()%>%
+  mutate(Check = `UNIONPZ`+`SPDPZ` + `LINPZ` + `GRUPZ` + `FDPPZ`)
+head(dfin_2005,10)
+write.csv(dfin_2005, file="C:/Weiterbildung/HdM/Projektarbeit/FINAL DATA/Wahldaten_clean/dfin_2005.csv")
+
+```
+
+
+#### Anwenden der Funktion auf die Wahldaten von 2002
+
+```{r}
+
+# Wahldaten 2002 - Datenvorbereitung
+df <- read_excel("C:/Weiterbildung/HdM/Projektarbeit/FINAL DATA/Wahldaten/BTWA2002.xlsx")
+df$Wahljahr <- "2002"
+dfin_2002 <- df%>%
+  cleanup01a()%>%
+  cleanup02a()%>%
+  cleanup03a()%>%
+  cleanup04a()%>%
+  mutate(Check = `UNIONPZ`+`SPDPZ` + `LINPZ` + `GRUPZ` + `FDPPZ`)
+head(dfin_2002,10)
+write.csv(dfin_2002, file="C:/Weiterbildung/HdM/Projektarbeit/FINAL DATA/Wahldaten_clean/dfin_2002.csv")
+
+```
+
+
+#### Anwenden der Funktion auf die Wahldaten von 1998
+
+```{r}
+
+# Wahldaten 1998 - Datenvorbereitung
+df <- read_excel("C:/Weiterbildung/HdM/Projektarbeit/FINAL DATA/Wahldaten/BTWA1998.xlsx")
+df$Wahljahr <- "1998"
+dfin_1998 <- df%>%
+  cleanup01a()%>%
+  cleanup02a()%>%
+  cleanup03a()%>%
+  cleanup04a()%>%
+  mutate(Check = `UNIONPZ`+`SPDPZ` + `LINPZ` + `GRUPZ` + `FDPPZ`)
+head(dfin_1998,10)
+write.csv(dfin_1998, file="C:/Weiterbildung/HdM/Projektarbeit/FINAL DATA/Wahldaten_clean/dfin_1998.csv")
+
+```
+
+
+#### Anwenden der Funktion auf die Wahldaten von 1994
+
+```{r}
+
+# Wahldaten 1994 - Datenvorbereitung
+df <- read_excel("C:/Weiterbildung/HdM/Projektarbeit/FINAL DATA/Wahldaten/BTWA1994.xlsx")
+df$Wahljahr <- "1994"
+df$Nr <- as.character(df$Nr)
+dfin_1994 <- df%>%
+  cleanup01a()%>%
+  cleanup02a()%>%
+  cleanup03a()%>%
+  cleanup04a()%>%
+  mutate(Check = `UNIONPZ`+`SPDPZ` + `LINPZ` + `GRUPZ` + `FDPPZ`)
+head(dfin_1994,10)
+write.csv(dfin_1994, file="C:/Weiterbildung/HdM/Projektarbeit/FINAL DATA/Wahldaten_clean/dfin_1994.csv")
+
+```
+
+
+#### Anwenden der Funktion auf die Wahldaten von 1990
+
+```{r}
+
+# Wahldaten 1990 - Datenvorbereitung
+df <- read_excel("C:/Weiterbildung/HdM/Projektarbeit/FINAL DATA/Wahldaten/BTWA1990.xlsx")
+df$Wahljahr <- "1990"
+df$Nr <- as.character(df$Nr)
+dfin_1990 <- df%>%
+  cleanup01a()%>%
+  cleanup02a()%>%
+  cleanup03a()%>%
+  cleanup04a()%>%
+  mutate(Check = `UNIONPZ`+`SPDPZ` + `LINPZ` + `GRUPZ` + `FDPPZ`)
+head(dfin_1990,10)
+write.csv(dfin_1990, file="C:/Weiterbildung/HdM/Projektarbeit/FINAL DATA/Wahldaten_clean/dfin_1990.csv")
+
+```
+
+***
+
+### 2.6. Fazit 
+
+Die **Wahldaten der Jahre 1990 bis 2017 sind nun bereinigt und aufbereitet**. 
+Folgendes wurde erreicht:
+
+* Ergänzen des Wahljahrs im Datensatz
+* Ergänzen der Wahlbeteiligung im Datensatz
+* Reduktion auf die relevanten Parteien
+* Konsolidierung komplementärer Parteien
+* Berechnung der prozentualen Wahlergebnisse
+* Anpassung der Datentypen und Datenformate
+* Vereinfachung und Vereinheitlichung der Schreibweise der Wahlkreisnamen
+* Eindeutige Zuordnung der Wahlkreisnummern
+* Überprüfung der Berechnungen und Umwandlungen
+
+Im nächsten Schritt werden die Daten in die SQL-Datenbank geschrieben.
+
+***
+
+### 2.7. Laden der Wahldaten in die PostgreSQL-Datenbank
+
+#### Definition der benötigten Funktionen
+
+```{r}
+
+# ParseFile-Funktion
+parseFile <- function(file) {
+  fileext <- path_ext(basename(file))
+  content <- read.csv(file, header = TRUE, sep = ",", dec = ".") #encoding="UTF-8")
+  result <- list(
+  "content" = content,
+  "file_name" = file %>% basename() %>% path_ext_remove %>% tolower 
+  )
+  WriteMyDataToSQL(result$file_name, result$content)
+  return(result)
+}
+
+# ParseFolder-Funktion
+parseFolder <- function(path, pattern) {
+  # Filenamen einlesen, welche 'path' und 'pattern' entsprechen
+  files <- list.files(path = path, pattern = pattern, recursive = TRUE, full.names = TRUE)
+  # Erstellen einer Liste der Files
+  filesAsList <- lapply(files, parseFile)
+  return(filesAsList)
+}
+
+# WriteMyDataToSQL-Funktion
+WriteMyDataToSQL <- function(table_name, table_content) {
+  # Verbindung Initialisieren
+  con <- dbConnect(RPostgreSQL::PostgreSQL(),
+    host = 'hdm-sql.think-data.de', 
+    dbname = 'postgres',
+    user = 'postgres',
+    password = '%%CENSORED%%'
+    # Die folgende Vorgehensweise ist sicherer: 
+    # password = rstudioapi::askForPassword("Database password")
+    )
+  # Daten in die SQL-Datenbank schreiben
+  dbWriteTable(con, table_name, table_content, overwrite = TRUE)
+  # Verbindung lösen
+  dbDisconnect(con)
+}
+
+```
+
+#### Ausführen der Ladefunktionen
+
+```{r}
+
+# Ausführen der Ladefunktionen
+output <- parseFolder("C:/Weiterbildung/HdM/Projektarbeit/FINAL DATA/Wahldaten_clean", ".csv$")
+
+```
+
+#### Überprüfung der Ergebnisse in PostgreSQL
+
+Ein Blick in die PostgreSQL-Datenbank zeigt, dass alle Wahldaten korrekt und vollständig in die SQL-Datenbank geschrieben wurden. 
+
+
+```{r pressure, echo=FALSE, fig.cap="A caption", out.width = '100%'}
+knitr::include_graphics("C:/Weiterbildung/HdM/Projektarbeit/Final_Notebooks/Images/Image_wahldaten.png")
+```
+

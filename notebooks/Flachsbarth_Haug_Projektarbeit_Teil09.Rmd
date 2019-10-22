@@ -1,0 +1,541 @@
+---
+title: "Projektarbeit Stefan Flachsbarth & Martin Haug<br/><br/>Teil 9"
+subtitle: "<br/>Analyse von Wahlergebnissen, Strukturdaten und Presseberichterstattung<br/>Bundestagswahlen im Zeitraum 1990 - 2017"
+author: "<br/><br/>Stefan Flachsbarth, Martin Haug"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    fig_height: 8
+    fig_width: 12
+    highlight: tango
+    number_sections: yes
+    theme: paper
+    toc: yes
+    toc_depth: 2
+  pdf_document:
+    toc: yes
+    toc_depth: '2'
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(comment = NA)
+knitr::opts_chunk$set(message = FALSE)
+knitr::opts_chunk$set(warning = FALSE)
+```
+
+# 13. Textmining mit Elasticsearch
+
+## 13.1. Vorbereitung
+
+### Installation der benötigten R-Pakete
+
+```{r, eval=FALSE}
+
+install.packages(c("dplyr", "kableExtra", "elastic", "elasticsearchr"))
+
+```
+
+### Laden der Bibliotheken
+
+```{r, message=FALSE }
+library(DBI)
+library(dplyr)
+library(elastic)
+library(elasticsearchr)
+library(ggplot2)
+library(kableExtra)
+library(plyr)
+library(readr)
+library(stopwords)
+library(tidyverse)
+library(tidytext)
+
+```
+
+### Auslesen der Daten
+
+```{r}
+
+KillDbConnections <- function () {
+  all_cons <- dbListConnections(RPostgreSQL::PostgreSQL())
+  for(x in all_cons) +  dbDisconnect(x)
+}
+
+ReadPresseTablebyYear <- function(table_name, year) {
+  # Initierung der Datenbank
+  con <- dbConnect(RPostgreSQL::PostgreSQL(),
+    host = 'hdm-sql.think-data.de', 
+    dbname = 'postgres',
+    user = 'postgres',
+    password = '%%CENSORED%%'
+    # Der richtige Weg, um auf sichere Weise das Passwort abzufragen
+    #password = rstudioapi::askForPassword("Database password")
+    )
+  
+  # Konstruktion der Query
+  query <- paste("SELECT * FROM ", table_name, " WHERE filename LIKE '%", year, "%'",sep="")
+
+  # Ausführen der Query und Zurückgeben des Ergebnisses
+  return(dbGetQuery(con, query))
+  
+  # Verbindungsabbau
+  KillDbConnections()
+}
+
+ReadPresseTable <- function(table_name) {
+  # Initierung der Datenbank
+  con <- dbConnect(RPostgreSQL::PostgreSQL(),
+    host = 'hdm-sql.think-data.de', 
+    dbname = 'postgres',
+    user = 'postgres',
+    password = '%%CENSORED%%'
+    # Der richtige Weg, um auf sichere Weise das Passwort abzufragen
+    #password = rstudioapi::askForPassword("Database password")
+    )
+
+  # Auslesen der Tabelle und Zurückgeben des Ergebnisses
+  return(dbReadTable(con, table_name))
+  
+  # Verbindungsabbau
+  KillDbConnections()
+}
+
+# Daten über die Funktion einlesen
+presse1990 <- ReadPresseTablebyYear("presse", 1990)
+presse1994 <- ReadPresseTablebyYear("presse", 1994)
+presse1998 <- ReadPresseTablebyYear("presse", 1998)
+presse2002 <- ReadPresseTablebyYear("presse", 2002)
+presse2005 <- ReadPresseTablebyYear("presse", 2005)
+presse2009 <- ReadPresseTablebyYear("presse", 2009)
+presse2013 <- ReadPresseTablebyYear("presse", 2013)
+presse2017 <- ReadPresseTablebyYear("presse", 2017)
+
+```
+
+### Validierung der Daten aus der Datenbank
+
+```{r}
+kable(head(presse1990,1), caption = "Presseartikel 1990") %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"), full_width = F) %>%
+  scroll_box(width = "100%", height = "200px")
+
+kable(head(presse1994,1), caption = "Presseartikel 1994") %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"), full_width = F) %>%
+  scroll_box(width = "100%", height = "200px")
+
+kable(head(presse1998,1), caption = "Presseartikel 1998") %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"), full_width = F) %>%
+  scroll_box(width = "100%", height = "200px")
+
+kable(head(presse2002,1), caption = "Presseartikel 2002") %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"), full_width = F) %>%
+  scroll_box(width = "100%", height = "200px")
+
+kable(head(presse2005,1), caption = "Presseartikel 2005") %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"), full_width = F) %>%
+  scroll_box(width = "100%", height = "200px")
+
+kable(head(presse2009,1), caption = "Presseartikel 2009") %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"), full_width = F) %>%
+  scroll_box(width = "100%", height = "200px")
+
+kable(head(presse2013,1), caption = "Presseartikel 2013") %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"), full_width = F) %>%
+  scroll_box(width = "100%", height = "200px")
+
+kable(head(presse2017,1), caption = "Presseartikel 2017") %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"), full_width = F) %>%
+  scroll_box(width = "100%", height = "200px")
+
+```
+
+***
+
+## 13.2. Transformation der Daten
+
+### Bereinigen der Publikationen
+
+```{r}
+# Funktion, um die Bereinigung der Publikationen durchzuführen
+verlag_cleanup <- function(dataframe,column) {
+  # Filter von Inhalten wie "$verlag vom 01.01.2001 ..."
+  dataframe[[column]] <- gsub(" vom.*$", "", dataframe[[column]], ignore.case = TRUE)
+  # Filter von Inhalten wie "$verlag print: Nr. 1 ..."
+  dataframe[[column]] <- gsub(" print: nr. \\d.*$", "", dataframe[[column]], ignore.case = TRUE)
+  # Filter von Inhalten wie "$verlag Nr. 1 ..."
+  dataframe[[column]] <- gsub(" nr. \\d.*$", "", dataframe[[column]], ignore.case = TRUE)
+  # Filter von Inhalten wie "$verlag, Jg. 52, 01.01.2001 ..."
+  dataframe[[column]] <- gsub(", Jg. \\d.*$", "", dataframe[[column]], ignore.case = TRUE)
+  # Filter von Inhalten wie "$verlag, 01.01.2001, S. 1 ..."
+  dataframe[[column]] <- gsub(", \\d\\d.\\d\\d.\\d\\d\\d\\d.*$", "", dataframe[[column]], ignore.case = TRUE)
+  # Filter von Inhalten wie "$verlag Nr. ..."
+  dataframe[[column]] <- gsub("Nr. *$", "", dataframe[[column]], ignore.case = TRUE)
+  
+  # Vereinheitlichen der Groß- und Kleinschreibung
+  # Entfernen aller Leerzeichen vor und nach der Publikation
+  dataframe[[column]] <- tolower(dataframe[[column]]) %>% trimws()
+  
+  return(dataframe)
+}
+
+# Bereinigung über die neue Funktion durchführen
+presse1990 <- verlag_cleanup(presse1990, "publisher")
+presse1994 <- verlag_cleanup(presse1994, "publisher")
+presse1998 <- verlag_cleanup(presse1998, "publisher")
+presse2002 <- verlag_cleanup(presse2002, "publisher")
+presse2005 <- verlag_cleanup(presse2005, "publisher")
+presse2009 <- verlag_cleanup(presse2009, "publisher")
+presse2013 <- verlag_cleanup(presse2013, "publisher")
+presse2017 <- verlag_cleanup(presse2017, "publisher")
+
+```
+
+### Enternen von Stopwörtern
+
+#### Generieren der Stopwort-Liste
+
+```{r}
+# list of German stopwords
+stopword <- as_tibble(stopwords("de")) 
+stopword <- dplyr::rename(stopword, word=value)
+
+# Erweiterte Liste mit deutschen Stopwörtern
+stopword_extented <- read_tsv("https://raw.githubusercontent.com/solariz/german_stopwords/master/german_stopwords_full.txt", col_names = FALSE, comment = ";")
+stopword_extented <- dplyr::rename(stopword_extented, word=X1)
+
+# Liste der eigenen Stopwörtern
+# bz ist ein Kürzel der badinschen zeitung
+# mz ist ein Kürzel für mitteldeutsche zeitung
+# rp ist ein Kürzel für rheinische post
+# sz ist ein Kürzel für sächsische zeitung
+# ta ist ein Kürzel der thüringer allgemeine
+# taz ist ein Kürzel der tageszeitung
+# tz ist ein Kürzel der tz - eine münchner zeitung
+stopword_own <- tibble(word = c("bz", "mz", "rp", "sz", "tz", "ta", "taz"))
+
+# Zusammenfügen und entfernen von Duplikaten
+all_stopword <- bind_rows(stopword,stopword_extented, stopword_own) %>% distinct() %>% dplyr::rename(token = word)
+
+```
+
+#### Anwenden der Stopwortlisten auf Artikeltext
+
+```{r}
+clean_stop_words_text <- function(df) {
+  x_token <- df %>% unnest_tokens(token, text, token = "words", format = "text", to_lower = TRUE, drop = TRUE)
+  x_token_count <- nrow(x_token)
+
+  x_stop <- anti_join(x_token, all_stopword, by = 'token')
+  x_stop_count <- nrow(x_stop)
+
+  text <- ddply(x_stop, .(row.names), summarize, text=paste(token, collapse=" "))
+  x_stop_joined <- join(x_stop, text, by="row.names") %>% select(-token) %>% ungroup()
+  
+  # Statistik f+r Artikeltext
+  print(paste("Die Anzahl der Token in den Artikeltext wurden von", x_token_count, "auf", x_stop_count,"durch das Entfernen der Stopwörter reduziert."))
+
+  return(x_stop_joined)  
+}
+
+presse1990_stop <- clean_stop_words_text(presse1990)
+presse1994_stop <- clean_stop_words_text(presse1994)
+presse1998_stop <- clean_stop_words_text(presse1998)
+presse2002_stop <- clean_stop_words_text(presse2002)
+presse2005_stop <- clean_stop_words_text(presse2005)
+presse2009_stop <- clean_stop_words_text(presse2009)
+presse2013_stop <- clean_stop_words_text(presse2013)
+presse2017_stop <- clean_stop_words_text(presse2017)
+
+```
+
+#### Anwenden der Stopwortlisten auf Artikelüberschrift
+
+```{r}
+
+
+clean_stop_words_header <- function(df) {
+  x_token <- df %>% unnest_tokens(token, header, token = "words", format = "text", to_lower = TRUE, drop = TRUE)
+  x_token_count <- nrow(x_token)
+
+  x_stop <- anti_join(x_token, all_stopword, by = 'token')
+  x_stop_count <- nrow(x_stop)
+
+  header <- ddply(x_stop, .(row.names), summarize, header=paste(token, collapse=" "))
+  x_stop_joined <- join(x_stop, header, by="row.names") %>% select(-token) %>% ungroup()
+  
+  # Statistik f+r Artikeltext
+  print(paste("Die Anzahl der Token in den Artikelüberschriften wurden von", x_token_count, "auf", x_stop_count,"durch das Entfernen der Stopwörter reduziert."))
+
+  return(x_stop_joined)  
+}
+
+presse1990_stop <- clean_stop_words_header(presse1990)
+presse1994_stop <- clean_stop_words_header(presse1994)
+presse1998_stop <- clean_stop_words_header(presse1998)
+presse2002_stop <- clean_stop_words_header(presse2002)
+presse2005_stop <- clean_stop_words_header(presse2005)
+presse2009_stop <- clean_stop_words_header(presse2009)
+presse2013_stop <- clean_stop_words_header(presse2013)
+presse2017_stop <- clean_stop_words_header(presse2017)
+
+```
+
+***
+
+## 13.3. Importieren der Daten in Elasticsearch
+
+```{r}
+
+# Um Duplikate im Index zu vermeiden, werden zunächst alle Zielindexes gelöscht.
+# Dazu wird das Paket elasticsearchr verwendet.
+
+elastic("https://elastic:%%CENSORED%%@94c36940d15f4af5bf06bcff83892ced.eu-west-1.aws.found.io:9243", "presse*") %delete% TRUE
+elastic("https://elastic:%%CENSORED%%@94c36940d15f4af5bf06bcff83892ced.eu-west-1.aws.found.io:9243", "cleaned*") %delete% TRUE
+
+```
+
+### Senden der Dataframes an Elasticsearch
+
+```{r}
+
+# Es können auch alternative R-Pakete zur Interaktion mit elasticsearch benutzt werden.
+# In diesem Beispiel wird das Paket "elastic" genutzt.
+
+# Einrichten der Verbindung zur elastic-Umgebung
+es <- connect(host = "94c36940d15f4af5bf06bcff83892ced.eu-west-1.aws.found.io", port = "9243", transport_schema = "https", user="elastic", pwd = "%%CENSORED%%")
+
+# Hochladen der Dataframes
+invisible(docs_bulk(conn = es, index = "presse1990", presse1990, quiet = TRUE))
+invisible(docs_bulk(conn = es, index = "presse1994", presse1994, quiet = TRUE))
+invisible(docs_bulk(conn = es, index = "presse1998", presse1998, quiet = TRUE))
+invisible(docs_bulk(conn = es, index = "presse2002", presse2002, quiet = TRUE))
+invisible(docs_bulk(conn = es, index = "presse2005", presse2005, quiet = TRUE))
+invisible(docs_bulk(conn = es, index = "presse2009", presse2009, quiet = TRUE))
+invisible(docs_bulk(conn = es, index = "presse2013", presse2013, quiet = TRUE))
+invisible(docs_bulk(conn = es, index = "presse2017", presse2017, quiet = TRUE))
+
+```
+
+```{r}
+
+# Hochladen der Dataframes
+# Diesen Daten werden nur zur Analyse in Kibana verwendet.
+invisible(docs_bulk(conn = es, index = "cleaned1990", presse1990_stop, quiet = TRUE))
+invisible(docs_bulk(conn = es, index = "cleaned1994", presse1994_stop, quiet = TRUE))
+invisible(docs_bulk(conn = es, index = "cleaned1998", presse1998_stop, quiet = TRUE))
+invisible(docs_bulk(conn = es, index = "cleaned2002", presse2002_stop, quiet = TRUE))
+invisible(docs_bulk(conn = es, index = "cleaned2005", presse2005_stop, quiet = TRUE))
+invisible(docs_bulk(conn = es, index = "cleaned2009", presse2009_stop, quiet = TRUE))
+invisible(docs_bulk(conn = es, index = "cleaned2013", presse2013_stop, quiet = TRUE))
+invisible(docs_bulk(conn = es, index = "cleaned2017", presse2017_stop, quiet = TRUE))
+
+```
+
+### Updaten des Index-Templates
+
+Elasticsearch verwaltet Daten in Dokumenten, welche wiederum in Indices geschrieben werden. Um für unseren Use Case eine Volltextsuche auf die Spalten bzw. die Felder "header" und text" zu ermöglichen, ist es notwendig, diese als solches zu markieren. Das Attribut "fielddata" wird auf den Wert "true" gesetzt, nachdem die Indices angelegt wurden. Der nachfolgende Aufruf kann über die DevTools eingespielt werden. Alternativ kann das curl-Kommando im Anschluss vom lokalen Rechner verwendet werden.
+
+```{ eval=FALSE}
+PUT presse*/_mapping
+{
+  "properties": {
+    "text": { 
+      "type":     "text",
+      "fielddata": true
+    },
+    "header": { 
+      "type":     "text",
+      "fielddata": true
+    }    
+  }
+}
+
+PUT cleaned*/_mapping
+{
+  "properties": {
+    "text": { 
+      "type":     "text",
+      "fielddata": true
+    },
+    "header": { 
+      "type":     "text",
+      "fielddata": true
+    }    
+  }
+}
+
+```
+
+```{ eval=FALSE}
+curl -u elastc:$password -XPUT "http://94c36940d15f4af5bf06bcff83892ced.containerhost:9244/presse*/_mapping" -H 'Content-Type: application/json' -d'{ "properties": { "text": { "type": "text", "fielddata": true }}}'
+
+```
+
+***
+
+## 13.4. Auslesen der Daten aus Elasticsearch
+
+```{r}
+# Suchen nach einem Dokument in dem Index "presse*"
+Search(conn = es, index = "presse*", size = 1)$hits$hits
+
+# Suchen nach einem Dokument mit dem Begriff "cdu" in der Artikelüberschrift
+Search(conn = es, index = "presse*", q = "header:cdu", size = 1)$hits$hits
+
+# Suchen nach dem Verlag mit dem Begriff "spd" in der Artikelüberschrift
+Search(conn = es, index = "presse*", q = "header:spd", size = 1)$hits$hits[[1]]$`_source`$publisher
+
+# Suchen nach dem Verlag mit dem Begriff "spd" in der Artikelüberschrift
+Search(conn = es, index = "presse*", q = "header:spd", size = 1)$hits$hits[[1]]$`_source`$id
+
+# Verarbeiten der JSON-Antwort in menschliches lesbares Format
+# Als Ausgabe möchten wir die Artikelüberschriften haben
+Search_uri(conn = es, index = 'presse2017', q = 'spd', df = "header", asdf =T)$hits$hits[[7]]
+
+```
+
+### Abfrage aller Dokumente
+
+Abfragen aller Dokumente aus dem Index "presse*". Der Stern repräsentiert dabei eine Wildcard und wird dadurch auf alle angelegten Indices angewendet.
+
+```{r}
+match_all <- query('{
+    "match_all": {}
+  }')
+
+result_match_all <- elastic("https://elastic:%%CENSORED%%@94c36940d15f4af5bf06bcff83892ced.eu-west-1.aws.found.io:9243", "presse*") %search% (match_all)
+
+kable(head(result_match_all,1), caption = "Presseartikel 2017") %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"), full_width = F) %>%
+  scroll_box(width = "100%", height = "200px")
+
+```
+
+### Abfrage zum Klima
+
+Abfragen aller Dokumente, welche im Artikeltext oder in der Artikelüberschrift den Begriff "klima", "klimakrise" oder "umwelt" haben.
+
+```{r}
+
+match_klima <- query('{
+    "multi_match": {
+      "query": "(klima) OR (klimakrise) OR (umwelt)",
+      "fields": [ "header", "text" ]
+    }
+  }')
+
+result_match_klima <- elastic("https://elastic:%%CENSORED%%@94c36940d15f4af5bf06bcff83892ced.eu-west-1.aws.found.io:9243", "presse*") %search% (match_klima)
+
+kable(head(result_match_all,1), caption = "Presseartikel 2017") %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"), full_width = F) %>%
+  scroll_box(width = "100%", height = "200px")
+
+```
+
+### Abfrage zur CDU/CSU
+
+Abfragen aller Dokumente, welche die Begriff "angela merkel", "cdu", "csu" oder "horst seehofer" haben.
+
+```{r}
+
+match_cdu_csu <- query('{
+    "bool": {
+      "should": [
+        {
+          "match": {
+            "text": "angela merkel"
+          }
+        },
+        {
+          "match": {
+            "text": "cdu"
+          }
+        },
+        {
+          "match": {
+            "text": "csu"
+          }
+        },
+        {
+          "match": {
+            "text": "horst seehofer"
+          }
+        }
+      ]
+    }
+  }')
+
+result_match_cdu_csu <- elastic("https://elastic:%%CENSORED%%@94c36940d15f4af5bf06bcff83892ced.eu-west-1.aws.found.io:9243", "presse*" ) %search% (match_cdu_csu)
+
+kable(head(result_match_all,1), caption = "Presseartikel 2017") %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"), full_width = F) %>%
+  scroll_box(width = "100%", height = "200px")
+
+```
+
+***
+
+## 13.5. Visualisierung der Ergebnisse
+
+### Visualisierung der Daten zum Thema 'Klima' mit R
+
+```{r}
+
+result_match_klima_count <- count(result_match_klima$year)
+
+ggplot(result_match_klima_count, aes(x=x, y=freq)) +
+  labs(y = "Anzahl der Artikel", title = "Artikel mit Klima, Klimakrise oder Umwelt") +
+  geom_bar(stat = "identity", fill="steelblue")+
+  theme(axis.text.x = element_text(vjust = 0.5)) +
+  scale_x_continuous("Jahr", breaks = result_match_klima_count$x,
+                     labels = as.character(result_match_klima_count$x))
+
+```
+
+### Visualisierung der Daten zum Thema 'CDU' mit R
+
+```{r}
+
+result_match_cdu_csu_year_count <- count(result_match_cdu_csu$year)
+
+ggplot(result_match_cdu_csu_year_count, aes(x=x, y=freq)) +
+  labs(y = "Anzahl der Artikel", title = "Artikel mit CDU, CSU, Angela Merkel oder Horst Seehofer") +
+  geom_bar(stat = "identity", fill="steelblue")+
+  theme(axis.text.x = element_text(vjust = 0.5)) +
+  scale_x_continuous("Jahr", breaks = result_match_cdu_csu_year_count$x, 
+                     labels = as.character(result_match_cdu_csu_year_count$x))
+
+```
+
+
+### Wordcloud über die Top10 Publikationen nach Anzahl der Artikel mit Kibana
+
+Die Größe der Verlage repräsentiert die Anzahl der Artikel.
+
+![Wordcloud über die Top10 Publikationen nach Anzahl der Artikel mit Kibana](https://github.com/TheFakeStefan/DataSciencewithR/raw/master/images/kibana/vis_top10_publisher.png)
+
+### Barchart über die Anzahl der Artikel aus den vergangenen Wahljahren mit Kibana
+
+![Barchart über die Anzahl der Artikel aus den vergangenen Wahljahren](https://github.com/TheFakeStefan/DataSciencewithR/raw/master/images/kibana/vis_total_articles.png)
+
+### Barchart über die Artikel mit Filtern nach den angegebenen Begriffen mit Kibana
+
+![Barchart über die Artikel mit Filtern nach den angegebenen Begriffen](https://github.com/TheFakeStefan/DataSciencewithR/raw/master/images/kibana/vis_articles_terms.png)
+
+### Graph über den Begriff AFD mit Kibana
+
+![Graph über den Begriff AFD](https://github.com/TheFakeStefan/DataSciencewithR/raw/master/images/kibana/graph_afd.png)
+
+### Graph über den Begriff CDU mit Kibana
+![Graph über den Begriff CDU](https://github.com/TheFakeStefan/DataSciencewithR/raw/master/images/kibana/graph_cdu.png)
+
+### Graph Visualisierung mit den Begriffen "AFD" und "Flüchtlinge" mit Kibana
+
+![Graph über die Begriffe AFD und Flüchtlinge](https://github.com/TheFakeStefan/DataSciencewithR/raw/master/images/kibana/graph_afd_fluechtlinge.png)
+
+***
+
+## 13.6. Zugriff auf Kibana-Instanz
+
+Die Kibana-Instanz kann über http://hdm-kibana.think-data.de aufgerufen werden. Die Zugangsdaten können bei den Autoren angefragt werden.

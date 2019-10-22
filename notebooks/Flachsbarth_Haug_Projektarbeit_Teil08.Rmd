@@ -1,0 +1,298 @@
+---
+title: "Projektarbeit Stefan Flachsbarth & Martin Haug<br/><br/>Teil 8 - Visualisierung mit shiny"
+subtitle: "<br/>Analyse von Wahlergebnissen, Strukturdaten und Presseberichterstattung<br/>Bundestagswahlen im Zeitraum 1990 - 2017"
+author: "<br/><br/>Stefan Flachsbarth, Martin Haug"
+date: "`r Sys.Date()`"
+output:
+  html_document: 
+    fig_height: 8
+    fig_width: 12
+    highlight: tango
+    theme: paper
+    toc: yes
+    toc_depth: 3
+  pdf_document:
+    toc: yes
+    toc_depth: '3'
+editor_options: 
+  chunk_output_type: inline
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(comment = NA)
+knitr::opts_chunk$set(message = FALSE)
+knitr::opts_chunk$set(warning = FALSE)
+```
+
+## 9. Visualisierung mit Shiny
+
+#### Installation der benötigten Pakete
+
+```{r, eval=FALSE}
+
+install.packages(c("rsconnect", "shiny")
+
+```
+
+### 9.1. Deployment der Applikation
+
+```{r, eval=FALSE}
+
+rsconnect::setAccountInfo(name='hdm-shiny',
+			  token='%%CENSORED%%',
+			  secret='%%CENSORED%%')
+
+library(rsconnect)
+rsconnect::deployApp(appName = "wordcloud",'/Users/e86051/Desktop/revised/Shiny/app')
+
+```
+
+***
+
+### 9.2. Aufrufen der Applikation
+
+Die Applikation kann über http://hdm-shiny.think-data.de aufgerufen werden.
+
+***
+
+### 9.3. Code der Applikation
+
+Die Applikation besteht aus 4 Dateien, welche nachfolgend in den Codeboxen dokumentiert sind. Die Applikation wurde in Anlehnung an andere öffentliche Projekte erstellt. Teile des Codes wurden von diesen entnommen und für diesen Anwendungsfall angepasst. Die verwendeten Quellen sind nachfolgend genannt:
+
+* https://github.com/TrigonaMinima/shiny_apps/tree/master/wordcloud
+* https://www.rdocumentation.org/packages/ECharts2Shiny/versions/0.2.13/topics/renderWordcloud
+* https://shiny.rstudio.com/gallery/word-cloud.html
+
+#### app.R
+
+```{r, eval=FALSE}
+# Starte die Anwendung
+shinyApp(ui = ui, server = server)
+
+```
+
+#### server.R
+
+```{r, eval=FALSE}
+# Funktion für das reaktive Element
+function(input, output, session) {
+  # Define a reactive expression for the document term matrix
+  terms <- reactive({
+    # Aktualsiere den Status, wenn der Button betätigt wird
+    input$update
+    # Für alles andere nicht
+    isolate({
+      withProgress({
+        setProgress(message = "Baue die Wordcloud auf ...")
+        getTermMatrix(input$selection)
+      })
+    })
+  })
+  
+  # Wordcloud vorhersagbar
+  wordcloud_rep <- repeatable(wordcloud)
+
+  # Generie die Wordcloud anhand der Parameter
+  output$plot <- renderPlot({
+    v <- terms()
+    wordcloud_rep(names(v), v, scale=c(5, 0.5), use.r.layout=FALSE,
+                  min.freq = input$freq, max.words=input$max,
+                  colors=brewer.pal(8, "Dark2"))
+  }, height = 600, width = 600)
+}
+
+```
+
+#### ui.R
+
+```{r, eval=FALSE}
+# Generelles Aussehen der App
+fluidPage(
+  # Titel
+  titlePanel("Word Cloud von Stefan Flachsbarth und Martin Haug"),
+  
+  sidebarLayout(
+    # Sidebar
+    sidebarPanel(
+      selectInput("selection", "Wählen Sie die Datenquelle:",
+                  choices = menu),
+      actionButton("update", "Aktualisieren"),
+      hr(),
+      sliderInput("freq",
+                  "Mindestanzahl des Tokens:",
+                  min = 1,  max = 100, value = 15),
+      sliderInput("max",
+                  "Maximale Anzahl an Wörtern:",
+                  min = 1,  max = 300,  value = 100)
+    ),
+    
+    # Inhalt (Wordcloud)
+    mainPanel(
+      plotOutput("plot")
+    )
+  )
+)
+
+```
+
+#### global.R
+
+```{r, eval=FALSE}
+
+## Laden der Bibliotheken
+library(DBI)
+library(dplyr)
+library(readr)
+library(tidytext)
+library(stopwords)
+library(wordcloud2)
+
+# Daten über die Funktion einlesen
+
+## Auslesen der Daten
+KillDbConnections <- function () {
+  all_cons <- dbListConnections(RPostgreSQL::PostgreSQL())
+  for(x in all_cons) +  dbDisconnect(x)
+}
+
+ReadPresseTablebyYear <- function(table_name, year) {
+  # Initierung der Datenbank
+  con <- dbConnect(RPostgreSQL::PostgreSQL(),
+                   host = 'hdm-sql.think-data.de', 
+                   dbname = 'postgres',
+                   user = 'postgres',
+                   password = '%%CENSORED%%'
+                   # Der richtige Weg, sicher das Passwort bei der Ausführung abfragen
+                   #password = rstudioapi::askForPassword("Database password")
+  )
+  
+  # Konstruktion der Query
+  query <- paste("SELECT * FROM ", table_name, " WHERE filename LIKE '%", year, "%'",sep="")
+  
+  # Ausführen der Query und Zurückgeben des Ergebnisses
+  return(dbGetQuery(con, query))
+  
+  # Verbindungsabbau
+  KillDbConnections()
+}
+
+ReadPresseTable <- function(table_name) {
+  # Initierung der Datenbank
+  con <- dbConnect(RPostgreSQL::PostgreSQL(),
+                   host = 'hdm-sql.think-data.de', 
+                   dbname = 'postgres',
+                   user = 'postgres',
+                   password = '%%CENSORED%%'
+                   # Der richtige Weg, sicher das Passwort bei der Ausführung abfragen
+                   #password = rstudioapi::askForPassword("Database password")
+  )
+  
+  # Auslesen der Tabelle und Zurückgeben des Ergebnisses
+  return(dbReadTable(con, table_name))
+  
+  # Verbindungsabbau
+  KillDbConnections()
+}
+
+presse <- ReadPresseTable("presse")
+
+# Anpassen der Daten
+presse_cleaned <- presse
+# Filtern von Inhalten wie "$publikation vom 01.01.2001 ..."
+presse_cleaned$publisher <- gsub(" vom.*$", "", presse_cleaned$publisher, ignore.case = TRUE)
+# Filtern von Inhalten wie "$publikation print: Nr. 1 ..."
+presse_cleaned$publisher <- gsub(" print: nr. \\d.*$", "", presse_cleaned$publisher, ignore.case = TRUE)
+# Filtern von Inhalten wie "$publikation Nr. 1 ..."
+presse_cleaned$publisher <- gsub(" nr. \\d.*$", "", presse_cleaned$publisher, ignore.case = TRUE)
+# Filtern von Inhalten wie "$publikation, Jg. 52, 01.01.2001 ..."
+presse_cleaned$publisher <- gsub(", Jg. \\d.*$", "", presse_cleaned$publisher, ignore.case = TRUE)
+# Filtern von Inhalten wie "$publikation, 01.01.2001, S. 1 ..."
+presse_cleaned$publisher <- gsub(", \\d\\d.\\d\\d.\\d\\d\\d\\d.*$", "", presse_cleaned$publisher, ignore.case = TRUE)
+# Filtern von Inhalten wie "$publikation Nr. ..."
+presse_cleaned$publisher <- gsub("Nr. *$", "", presse_cleaned$publisher, ignore.case = TRUE)
+
+# Vereinheitlichen der Groß- und Kleinschreibung
+# Entfernen aller Leerzeichen vor und nach den Publikationen
+presse_cleaned$publisher <- tolower(presse_cleaned$publisher) %>% trimws()
+
+# Bundestagswahl ist sehr beliebt als Überschrift und verzerrt somit die gesamte Wordcloud
+presse_cleaned$header <- gsub("bundestagswahl", "", presse_cleaned$header, ignore.case = TRUE)
+
+# Extraktion der Token aus den Artikelüberschriften
+token_header <- unnest_tokens(as_tibble(presse_cleaned), word, header, token = "words", format = "text", to_lower = TRUE, drop = TRUE)
+
+# Extraktion der Token aus den Artikeltexten
+token_text <- unnest_tokens(as_tibble(presse_cleaned), word, text, token = "words", format = "text", to_lower = TRUE, drop = TRUE)
+
+# Liste mit deutschen Stopwörtern
+stopword <- as_tibble(stopwords::stopwords("de")) 
+stopword <- rename(stopword, word=value)
+
+# Erweiterte Liste mit deutschen Stopwörtern
+stopword_extented <- read_tsv("https://raw.githubusercontent.com/solariz/german_stopwords/master/german_stopwords_full.txt", col_names = FALSE, comment = ";")
+stopword_extented <- rename(stopword_extented, word=X1)
+
+# Liste der eigenen Stopwörter
+# bz ist das Kürzel der Badischen Zeitung
+# mz ist das Kürzel der Mitteldeutschen Zeitung
+# rp ist das Kürzel der Rheinischen Post
+# sz ist das Kürzel der Sächsischen Zeitung
+# ta ist das Kürzel der Thüringer Allgemeinen
+# taz ist das Kürzel der tageszeitung
+# tz ist das Kürzel der tz (Münchner Zeitung)
+stopword_own <- tibble(word = c("bz", "mz", "rp", "sz", "tz", "ta", "taz"))
+
+# Zusammenfügen und Entfernen von Duplikaten
+all_stopword <- bind_rows(stopword,stopword_extented, stopword_own) %>% distinct()
+
+tb_header <- anti_join(token_header, all_stopword, by = 'word')
+tb_text <- anti_join(token_text, all_stopword, by = 'word')
+
+## Transformation der Daten
+
+top500_header_list <- tb_header %>% count(word) %>% top_n(500)
+top500_header <- tb_header %>% subset(word %in% top500_header_list$word)  %>% select(word)
+
+top500_text_list <- tb_text %>% count(word) %>% top_n(500)
+top500_text <- tb_text %>% filter(word %in% top500_text_list$word) %>% select(word)
+
+library(tm)
+library(wordcloud)
+library(memoise)
+
+# Menüelemente
+menu <- list("Artikeltext", "Artikelüberschrift")
+
+# Wir hatten zunächst massive Probleme beim Wechsel der Quellen.
+# Daher die Verwendung von "memoise", um die Ergebnisse zwischenzuspeichern.
+# Dadurch konnte die Performance massiv verbessert werden.
+
+# Alternativ hatten wir das paket wordcloud2 verwendet, jedoch akzeptiert
+# das Paket nicht korrekt die Menge der Terms und die Anzahl der dargestellten
+# Token, weshalb diese Implementierung später wieder verworfen wurde.
+
+getTermMatrix <- memoise(function(quelle) {
+  # Wenn ungültig, dann lade nichts
+  if (!(quelle %in% menu))
+    stop("Unbekannte Quelle")
+  # Wenn Artikeltext, dann lade die Top500 Artikeltexte
+  if (quelle == "Artikeltext")
+    text <- top500_text
+  # Wenn Artikelüberschrift, dann lade die Top500 Artikelüberschriften
+  if (quelle == "Artikelüberschrift") 
+    text <- top500_header
+
+  # Erstellen des Objektes für die Wordcloud
+  myCorpus = Corpus(VectorSource(text))
+  myCorpus = tm_map(myCorpus, removePunctuation)
+  myCorpus = tm_map(myCorpus, removeNumbers)
+
+  myDTM = TermDocumentMatrix(myCorpus,
+                             control = list(minWordLength = 1))
+  
+  m = as.matrix(myDTM)
+  sort(rowSums(m), decreasing = TRUE)
+})
+
+```
