@@ -626,19 +626,21 @@ Abschließend können wir zusammenfassen, dass die **Gesamthypothese als bestät
 ```{r, eval=FALSE}
 # Einlesen der Karte
 shapefile <- readOGR("deutschland.shp")
-germany <- germany %>% 
-  mutate(LAND_NR = as.numeric(LAND_NR))
+
 # Einlesen der Strukturdaten
 beschaeftigung <- ReadData("beschaeftigung.csv")
 beschaeftigung_2017 <- beschaeftigung %>% 
-  filter(jahr == 2017) % >%rename(LKR_NR = X) %>% 
+  filter(jahr == 2017) %>% rename(LKR_NR = X) %>% 
   mutate(LKR_NR = as.numeric(LKR_NR))
+
 # Zusammenführen der Strukturdaten mit dem Mapping
 beschaeftigung_2017 <- merge(x=beschaeftigung_2017, y=mapping_df, 
                              by.x="LKR_NR", by.y="LKR_NR") %>% 
   subset("LKR_NR", "WKR_NR", "beschaftigungsquote")
+
 # Zusammenführen der Karte und Daten
 map <- merge(x=germany, y = beschaeftigung_2017, by.x="WKR_NR", by.y="WKR_NR" )
+
 # Ausgabe
 plot(map['beschaftigungsquote'], main = "Beschäftigungsquote von 2017")
 ```
@@ -668,15 +670,17 @@ plot(map['beschaftigungsquote'], main = "Beschäftigungsquote von 2017")
 stopword <- as_tibble(stopwords::stopwords("de")) 
 
 # Erweiterte Liste mit deutschen Stoppwörtern
-stopword_extented <- read_tsv("https://raw.githubusercontent.com/
-solariz/german_stopwords/master/german_stopwords_full.txt", comment = ";")
+# https://githubt.com/solariz/german_stopwords
+stopword_extented <- read_tsv("german_stopwords_full.txt", comment = ";")
 
 # Liste der eigenen Stoppwörtern
 stopword_own <- tibble(word = c("bz", "mz", "rp", "sz", "tz", "ta", "taz"))
 
 # Zusammenfügen und entfernen von Duplikaten
-all_stopword <- bind_rows(stopword,stopword_extented, stopword_own) %>% distinct()
+all_stopword <- bind_rows(stopword, stopword_extented, stopword_own) %>% distinct()
 
+tb_text <- presse %>% unnest_tokens(token, text, token = "words", 
+                                    format = "text", to_lower = TRUE, drop = TRUE)
 
 tb_header <- anti_join(token_header, all_stopword, by = 'word')
 tb_text <- anti_join(token_text, all_stopword, by = 'word')
@@ -693,7 +697,7 @@ tb_text <- anti_join(token_text, all_stopword, by = 'word')
   - Parteien
 
 ```{r, eval=FALSE}
-# Durchsuchen der Artikel nach jeder Partei
+# Durchsuchen der Artikel nach eines Partei
 article_patei_linke_count <- tb_text %>% 
   filter(word == "linken" | word == "pds") %>% 
   group_by(year) %>% 
@@ -726,14 +730,17 @@ article_patei_percent <- group_by(article_patei_total, year) %>%
 pateifarben <- c("blue", "black", "yellow", "green", "purple", "red")
 
 # Ausgeben des Balkendiagramms
-ggplot(data=article_patei_percent, aes(x=year, y=percent, fill=word )) +
+ggplot(data=article_patei_percent, 
+       aes(x=year, y=percent, fill=word)) +
   geom_bar(stat="identity",
            position='stack')+
   scale_fill_manual(values=pateifarben) +
   xlab("Nennungen in der Presse") +
   ylab("Prozent") +
   theme_minimal() +
-  theme(legend.title = element_blank()) +
+  theme(text = element_text(size=20),
+        plot.background = element_rect(fill = "#FAFAFA"),
+        legend.title = element_blank()) +
   ggtitle("Relevanz der Partei in der Presse")
 ```
 
@@ -758,10 +765,9 @@ read_wahlergebnis <- function(partei) {
                  col_type = cols()) %>% 
   select(Wahljahr,toupper(partei)) %>% 
   as.data.frame() %>%
-  rename("year" = Wahljahr, "percent" = toupper(partei))
+  rename("year" = Wahljahr,"percent" = toupper(partei))
   z$type <- "r" # Reales Ergebnis
-  z$word <- tolower(partei)
-  z$n <- 0
+  z$word <- toupper(partei)
   return(z)
 }
 
@@ -770,7 +776,7 @@ wahlergbnis_cdu <- read_wahlergebnis("CDU")
 
 # Zusammenführen mit den Pressedaten
 article_patei_percent$type <- "p" # Presse Ergebnis
-graphdata <- rbind(article_patei_percent,wahlergbnis_patei_percent)
+graphdata <- rbind(article_patei_percent, wahlergbnis_patei_percent)
 ```
 
 ---
@@ -781,9 +787,6 @@ graphdata <- rbind(article_patei_percent,wahlergbnis_patei_percent)
 **Vergleich von Pressepräsenz und realen Wahlergebnissen**
 
 ```{r, eval=FALSE}
-# Für die Formatierung
-graphdata$word <- toupper(graphdata$word)
-
 # Richtige Farbkennung der Parteien
 pateifarben <- c("blue", "black", "yellow", "green", "purple", "grey", "red")
 
@@ -797,7 +800,9 @@ ggplot(data=graphdata, aes(x=type, y=percent, fill=word )) +
   ylab("Prozent") +
   labs(caption = "... auf Basis der Nennungen in den Artikeltexten.") +
   theme_minimal() +
-  theme(legend.title = element_blank()) +
+  theme(text = element_text(size=20),
+        plot.background = element_rect(fill = "#FAFAFA"),
+        legend.title = element_blank()) +
   ggtitle("Vergleich der Wahlergebnisse mit der Relevanz in der Presse")
 ```
 
@@ -846,7 +851,7 @@ Vergleich einer Ost- und Westpublikation (**Sächsische Zeitung** vs. **Badische
 
 ```{r, eval=FALSE}
 # Selektion der Badischen Zeitung 
-tb_text_basische_zeitung <- filter(tb_text,publisher == "badische zeitung") 
+tb_text_basische_zeitung <- filter(tb_text, publisher == "badische zeitung") 
 
 # Berechnung des Scores für die negativen Wörter 
 tb_text_basische_zeitung_sentiment_neg <- 
@@ -890,8 +895,8 @@ getSentiment <- function(text,jahr) {
   x_senti_pos <- match(x$word, filter(sentiment_df, neg_pos == "pos")$word)
   x_pos_score <- sum(!is.na(x_senti_pos))
   # wir fangen hier mögliche nullwerte von x_neg_score ab
-  y <- ifelse(is.infinite(x_pos_score/x_neg_score),
-              x_pos_score,x_pos_score/x_neg_score) %>% as.numeric()
+  y <- ifelse(is.infinite(x_pos_score / x_neg_score),
+              x_pos_score,x_pos_score / x_neg_score) %>% as.numeric()
   print(paste("Der Sentiment für das Jahr", jahr, "beträgt", y))
   return(tibble(y,jahr))
 }
@@ -913,16 +918,18 @@ senti_header_1990 <- getSentiment(tb_text, "1990")
 # Zusammenführen der Dataframes
 senti_header_all$source <- "Titel"
 senti_text_all$source <- "Text"
-senti_all <- rbind(senti_header_all,senti_text_all) 
+senti_all <- rbind(senti_header_all, senti_text_all) 
 
 # Plotten der Grafik
-ggplot(data=senti_all, aes(x=jahr, y=y, fill=source )) +
+ggplot(data=senti_all, aes(x = jahr, y = y, fill = source )) +
   geom_bar(stat="identity",
           position=position_dodge())+
   xlab("Jahr") +
   ylab("Sentiment") +
   theme_minimal() +
-  theme(legend.title = element_blank()) +
+  theme(text = element_text(size=20),
+        plot.background = element_rect(fill = "#FAFAFA"),
+        legend.title = element_blank()) +
   ggtitle("Vergleich der Sentimente über die vergangenen Wahljahre")
 ```
 
