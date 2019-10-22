@@ -1,0 +1,865 @@
+,YearSchluessel,Year,Stadt-/Landkreis,Mindestsicherungsquote in %,LAND_NAME,LAND_ABK
+1001,201301001,2013,Flensburg,15.3,Schleswig-Holstein,SH
+1001,201701001,2017,Flensburg,16.5,Schleswig-Holstein,SH
+1002,201301002,2013,Kiel,15.5,Schleswig-Holstein,SH
+1002,201701002,2017,Kiel,16.7,Schleswig-Holstein,SH
+1003,201301003,2013,Lübeck,15.5,Schleswig-Holstein,SH
+1003,201701003,2017,Lübeck,15.600000000000001,Schleswig-Holstein,SH
+1004,201301004,2013,Neumünster,16.2,Schleswig-Holstein,SH
+1004,201701004,2017,Neumünster,17.0,Schleswig-Holstein,SH
+1051,201301051,2013,Kreis Dithmarschen,10.100000000000001,Schleswig-Holstein,SH
+1051,201701051,2017,Kreis Dithmarschen,11.0,Schleswig-Holstein,SH
+1053,201301053,2013,Kreis Herzogtum Lauenburg,8.200000000000001,Schleswig-Holstein,SH
+1053,201701053,2017,Kreis Herzogtum Lauenburg,8.700000000000001,Schleswig-Holstein,SH
+1054,201301054,2013,Kreis Nordfriesland,7.1000000000000005,Schleswig-Holstein,SH
+1054,201701054,2017,Kreis Nordfriesland,7.800000000000001,Schleswig-Holstein,SH
+1055,201301055,2013,Kreis Ostholstein,8.200000000000001,Schleswig-Holstein,SH
+1055,201701055,2017,Kreis Ostholstein,8.3,Schleswig-Holstein,SH
+1056,201301056,2013,Kreis Pinneberg,7.4,Schleswig-Holstein,SH
+1056,201701056,2017,Kreis Pinneberg,8.700000000000001,Schleswig-Holstein,SH
+1057,201301057,2013,Kreis Plön,6.9,Schleswig-Holstein,SH
+1057,201701057,2017,Kreis Plön,7.800000000000001,Schleswig-Holstein,SH
+1058,201301058,2013,Kreis Rendsburg-Eckernförde,7.2,Schleswig-Holstein,SH
+1058,201701058,2017,Kreis Rendsburg-Eckernförde,7.800000000000001,Schleswig-Holstein,SH
+1059,201301059,2013,Kreis Schleswig,8.8,Schleswig-Holstein,SH
+1059,201701059,2017,Kreis Schleswig,8.9,Schleswig-Holstein,SH
+1060,201301060,2013,Kreis Segeberg,6.800000000000001,Schleswig-Holstein,SH
+1060,201701060,2017,Kreis Segeberg,7.7,Schleswig-Holstein,SH
+1061,201301061,2013,Kreis Steinburg,8.4,Schleswig-Holstein,SH
+1061,201701061,2017,Kreis Steinburg,9.9,Schleswig-Holstein,SH
+1062,201301062,2013,Kreis Stormarn,5.1000000000000005,Schleswig-Holstein,SH
+1062,201701062,2017,Kreis Stormarn,6.2,Schleswig-Holstein,SH
+2000,201302,2013,Hamburg,13.0,Hamburg,HH
+2000,201702,2017,Hamburg,13.4,Hamburg,HH
+3101,201303101,2013,Braunschweig,9.700000000000001,Niedersachsen,NI
+3101,201703101,2017,Braunschweig,9.200000000000001,Niedersachsen,NI
+3102,201303102,2013,Salzgitter,11.700000000000001,Niedersachsen,NI
+3102,201703102,2017,Salzgitter,15.700000000000001,Niedersachsen,NI
+3103,201303103,2013,Wolfsburg,7.1000000000000005,Niedersachsen,NI
+3103,201703103,2017,Wolfsburg,8.200000000000001,Niedersachsen,NI
+3151,201303151,2013,Landkreis Gifhorn,6.1000000000000005,Niedersachsen,NI
+3151,201703151,2017,Landkreis Gifhorn,6.4,Niedersachsen,NI
+3153,201303153,2013,Landkreis Goslar,10.9,Niedersachsen,NI
+3153,201703153,2017,Landkreis Goslar,11.5,Niedersachsen,NI
+3154,201303154,2013,Landkreis Helmstedt,8.6,Niedersachsen,NI
+3154,201703154,2017,Landkreis Helmstedt,9.4,Niedersachsen,NI
+3155,201303155,2013,Landkreis Northeim,8.5,Niedersachsen,NI
+3155,201703155,2017,Landkreis Northeim,8.700000000000001,Niedersachsen,NI
+3156,201303156,2013,Landkreis Osterode am Harz,9.5,Niedersachsen,NI
+3156,201703156,2017,Landkreis Osterode am Harz,,Niedersachsen,NI
+3157,201303157,2013,Landkreis Peine,9.0,Niedersachsen,NI
+3157,201703157,2017,Landkreis Peine,9.1,Niedersachsen,NI
+3158,201303158,2013,Landkreis Wolfenbüttel,8.4,Niedersachsen,NI
+3158,201703158,2017,Landkreis Wolfenbüttel,8.5,Niedersachsen,NI
+3159,201303159,2013,Landkreis Göttingen,,Niedersachsen,NI
+3159,201703159,2017,Landkreis Göttingen,8.8,Niedersachsen,NI
+3241,201303241,2013,Hannover,12.100000000000001,Niedersachsen,NI
+3241,201703241,2017,Hannover,12.700000000000001,Niedersachsen,NI
+3251,201303251,2013,Landkreis Diepholz,6.800000000000001,Niedersachsen,NI
+3251,201703251,2017,Landkreis Diepholz,7.800000000000001,Niedersachsen,NI
+3252,201303252,2013,Landkreis Hameln-Pyrmont,10.700000000000001,Niedersachsen,NI
+3252,201703252,2017,Landkreis Hameln-Pyrmont,11.8,Niedersachsen,NI
+3254,201303254,2013,Landkreis Hildesheim,9.5,Niedersachsen,NI
+3254,201703254,2017,Landkreis Hildesheim,9.9,Niedersachsen,NI
+3255,201303255,2013,Landkreis Holzminden,9.3,Niedersachsen,NI
+3255,201703255,2017,Landkreis Holzminden,10.100000000000001,Niedersachsen,NI
+3256,201303256,2013,Landkreis Nienburg (Weser),8.4,Niedersachsen,NI
+3256,201703256,2017,Landkreis Nienburg (Weser),9.8,Niedersachsen,NI
+3257,201303257,2013,Landkreis Schaumburg,8.9,Niedersachsen,NI
+3257,201703257,2017,Landkreis Schaumburg,9.700000000000001,Niedersachsen,NI
+3351,201303351,2013,Landkreis Celle,9.8,Niedersachsen,NI
+3351,201703351,2017,Landkreis Celle,10.9,Niedersachsen,NI
+3352,201303352,2013,Landkreis Cuxhaven,7.4,Niedersachsen,NI
+3352,201703352,2017,Landkreis Cuxhaven,8.5,Niedersachsen,NI
+3353,201303353,2013,Landkreis Harburg,5.800000000000001,Niedersachsen,NI
+3353,201703353,2017,Landkreis Harburg,6.300000000000001,Niedersachsen,NI
+3354,201303354,2013,Landkreis Lüchow-Dannenberg,10.100000000000001,Niedersachsen,NI
+3354,201703354,2017,Landkreis Lüchow-Dannenberg,9.9,Niedersachsen,NI
+3355,201303355,2013,Landkreis Lüneburg,8.8,Niedersachsen,NI
+3355,201703355,2017,Landkreis Lüneburg,8.5,Niedersachsen,NI
+3356,201303356,2013,Landkreis Osterholz,5.5,Niedersachsen,NI
+3356,201703356,2017,Landkreis Osterholz,6.0,Niedersachsen,NI
+3357,201303357,2013,Landkreis Rotenburg (Wümme),5.7,Niedersachsen,NI
+3357,201703357,2017,Landkreis Rotenburg (Wümme),6.7,Niedersachsen,NI
+3358,201303358,2013,Landkreis Heidekreis,8.4,Niedersachsen,NI
+3358,201703358,2017,Landkreis Heidekreis,9.0,Niedersachsen,NI
+3359,201303359,2013,Landkreis Stade,8.1,Niedersachsen,NI
+3359,201703359,2017,Landkreis Stade,9.200000000000001,Niedersachsen,NI
+3360,201303360,2013,Landkreis Uelzen,8.0,Niedersachsen,NI
+3360,201703360,2017,Landkreis Uelzen,8.3,Niedersachsen,NI
+3361,201303361,2013,Landkreis Verden,7.4,Niedersachsen,NI
+3361,201703361,2017,Landkreis Verden,7.800000000000001,Niedersachsen,NI
+3401,201303401,2013,Delmenhorst,16.1,Niedersachsen,NI
+3401,201703401,2017,Delmenhorst,17.400000000000002,Niedersachsen,NI
+3402,201303402,2013,Emden,12.3,Niedersachsen,NI
+3402,201703402,2017,Emden,13.8,Niedersachsen,NI
+3403,201303403,2013,Oldenburg,12.3,Niedersachsen,NI
+3403,201703403,2017,Oldenburg,13.200000000000001,Niedersachsen,NI
+3404,201303404,2013,Osnabrück,12.600000000000001,Niedersachsen,NI
+3404,201703404,2017,Osnabrück,13.4,Niedersachsen,NI
+3405,201303405,2013,Wilhelmshaven,15.9,Niedersachsen,NI
+3405,201703405,2017,Wilhelmshaven,17.900000000000002,Niedersachsen,NI
+3451,201303451,2013,Landkreis Ammerland,6.1000000000000005,Niedersachsen,NI
+3451,201703451,2017,Landkreis Ammerland,6.9,Niedersachsen,NI
+3452,201303452,2013,Landkreis Aurich,8.700000000000001,Niedersachsen,NI
+3452,201703452,2017,Landkreis Aurich,9.0,Niedersachsen,NI
+3453,201303453,2013,Landkreis Cloppenburg,6.4,Niedersachsen,NI
+3453,201703453,2017,Landkreis Cloppenburg,7.0,Niedersachsen,NI
+3454,201303454,2013,Landkreis Emsland,5.300000000000001,Niedersachsen,NI
+3454,201703454,2017,Landkreis Emsland,6.0,Niedersachsen,NI
+3455,201303455,2013,Landkreis Friesland,7.5,Niedersachsen,NI
+3455,201703455,2017,Landkreis Friesland,7.800000000000001,Niedersachsen,NI
+3456,201303456,2013,Landkreis Grafschaft Bentheim,6.300000000000001,Niedersachsen,NI
+3456,201703456,2017,Landkreis Grafschaft Bentheim,6.7,Niedersachsen,NI
+3457,201303457,2013,Landkreis Leer,7.2,Niedersachsen,NI
+3457,201703457,2017,Landkreis Leer,7.7,Niedersachsen,NI
+3458,201303458,2013,Landkreis Oldenburg (Land),6.4,Niedersachsen,NI
+3458,201703458,2017,Landkreis Oldenburg (Land),6.800000000000001,Niedersachsen,NI
+3459,201303459,2013,Landkreis Osnabrück (Land),5.800000000000001,Niedersachsen,NI
+3459,201703459,2017,Landkreis Osnabrück (Land),5.7,Niedersachsen,NI
+3460,201303460,2013,Landkreis Vechta,5.2,Niedersachsen,NI
+3460,201703460,2017,Landkreis Vechta,6.5,Niedersachsen,NI
+3461,201303461,2013,Landkreis Wesermarsch,9.600000000000001,Niedersachsen,NI
+3461,201703461,2017,Landkreis Wesermarsch,10.200000000000001,Niedersachsen,NI
+3462,201303462,2013,Landkreis Wittmund,8.200000000000001,Niedersachsen,NI
+3462,201703462,2017,Landkreis Wittmund,7.6000000000000005,Niedersachsen,NI
+4011,201304011,2013,Bremen,15.9,Bremen,HB
+4011,201704011,2017,Bremen,17.2,Bremen,HB
+4012,201304012,2013,Bremerhaven,20.700000000000003,Bremen,HB
+4012,201704012,2017,Bremerhaven,21.400000000000002,Bremen,HB
+5111,201305111,2013,Düsseldorf,12.700000000000001,Nordrhein-Westfalen,NW
+5111,201705111,2017,Düsseldorf,13.4,Nordrhein-Westfalen,NW
+5112,201305112,2013,Duisburg,15.4,Nordrhein-Westfalen,NW
+5112,201705112,2017,Duisburg,17.900000000000002,Nordrhein-Westfalen,NW
+5113,201305113,2013,Essen,17.0,Nordrhein-Westfalen,NW
+5113,201705113,2017,Essen,18.7,Nordrhein-Westfalen,NW
+5114,201305114,2013,Krefeld,14.3,Nordrhein-Westfalen,NW
+5114,201705114,2017,Krefeld,15.4,Nordrhein-Westfalen,NW
+5116,201305116,2013,Mönchengladbach,16.8,Nordrhein-Westfalen,NW
+5116,201705116,2017,Mönchengladbach,18.0,Nordrhein-Westfalen,NW
+5117,201305117,2013,Mülheim an der Ruhr,13.100000000000001,Nordrhein-Westfalen,NW
+5117,201705117,2017,Mülheim an der Ruhr,15.4,Nordrhein-Westfalen,NW
+5119,201305119,2013,Oberhausen,14.600000000000001,Nordrhein-Westfalen,NW
+5119,201705119,2017,Oberhausen,16.2,Nordrhein-Westfalen,NW
+5120,201305120,2013,Remscheid,12.200000000000001,Nordrhein-Westfalen,NW
+5120,201705120,2017,Remscheid,13.5,Nordrhein-Westfalen,NW
+5122,201305122,2013,Solingen,11.200000000000001,Nordrhein-Westfalen,NW
+5122,201705122,2017,Solingen,11.9,Nordrhein-Westfalen,NW
+5124,201305124,2013,Wuppertal,15.9,Nordrhein-Westfalen,NW
+5124,201705124,2017,Wuppertal,17.2,Nordrhein-Westfalen,NW
+5154,201305154,2013,Kreis Kleve,7.4,Nordrhein-Westfalen,NW
+5154,201705154,2017,Kreis Kleve,8.4,Nordrhein-Westfalen,NW
+5158,201305158,2013,Kreis Mettmann,9.4,Nordrhein-Westfalen,NW
+5158,201705158,2017,Kreis Mettmann,10.0,Nordrhein-Westfalen,NW
+5162,201305162,2013,Rhein-Kreis Neuss,8.0,Nordrhein-Westfalen,NW
+5162,201705162,2017,Rhein-Kreis Neuss,9.200000000000001,Nordrhein-Westfalen,NW
+5166,201305166,2013,Kreis Viersen,7.9,Nordrhein-Westfalen,NW
+5166,201705166,2017,Kreis Viersen,8.3,Nordrhein-Westfalen,NW
+5170,201305170,2013,Kreis Wesel,8.700000000000001,Nordrhein-Westfalen,NW
+5170,201705170,2017,Kreis Wesel,9.700000000000001,Nordrhein-Westfalen,NW
+5314,201305314,2013,Bonn,10.8,Nordrhein-Westfalen,NW
+5314,201705314,2017,Bonn,11.9,Nordrhein-Westfalen,NW
+5315,201305315,2013,Köln,13.700000000000001,Nordrhein-Westfalen,NW
+5315,201705315,2017,Köln,14.0,Nordrhein-Westfalen,NW
+5316,201305316,2013,Leverkusen,11.700000000000001,Nordrhein-Westfalen,NW
+5316,201705316,2017,Leverkusen,13.0,Nordrhein-Westfalen,NW
+5334,201305334,2013,Aachen,11.4,Nordrhein-Westfalen,NW
+5334,201705334,2017,Aachen,11.8,Nordrhein-Westfalen,NW
+5354,201305354,2013,Kreis Aachen,,Nordrhein-Westfalen,NW
+5354,201705354,2017,Kreis Aachen,,Nordrhein-Westfalen,NW
+5358,201305358,2013,Kreis Düren,10.200000000000001,Nordrhein-Westfalen,NW
+5358,201705358,2017,Kreis Düren,10.700000000000001,Nordrhein-Westfalen,NW
+5362,201305362,2013,Rhein-Erft-Kreis,9.200000000000001,Nordrhein-Westfalen,NW
+5362,201705362,2017,Rhein-Erft-Kreis,9.8,Nordrhein-Westfalen,NW
+5366,201305366,2013,Kreis Euskirchen,7.2,Nordrhein-Westfalen,NW
+5366,201705366,2017,Kreis Euskirchen,8.1,Nordrhein-Westfalen,NW
+5370,201305370,2013,Kreis Heinsberg,8.6,Nordrhein-Westfalen,NW
+5370,201705370,2017,Kreis Heinsberg,8.700000000000001,Nordrhein-Westfalen,NW
+5374,201305374,2013,Oberbergischer Kreis,6.7,Nordrhein-Westfalen,NW
+5374,201705374,2017,Oberbergischer Kreis,7.5,Nordrhein-Westfalen,NW
+5378,201305378,2013,Rheinisch-Bergischer Kreis,7.1000000000000005,Nordrhein-Westfalen,NW
+5378,201705378,2017,Rheinisch-Bergischer Kreis,8.200000000000001,Nordrhein-Westfalen,NW
+5382,201305382,2013,Rhein-Sieg-Kreis,7.300000000000001,Nordrhein-Westfalen,NW
+5382,201705382,2017,Rhein-Sieg-Kreis,8.1,Nordrhein-Westfalen,NW
+5512,201305512,2013,Bottrop,11.4,Nordrhein-Westfalen,NW
+5512,201705512,2017,Bottrop,12.3,Nordrhein-Westfalen,NW
+5513,201305513,2013,Gelsenkirchen,19.5,Nordrhein-Westfalen,NW
+5513,201705513,2017,Gelsenkirchen,22.700000000000003,Nordrhein-Westfalen,NW
+5515,201305515,2013,Münster,8.700000000000001,Nordrhein-Westfalen,NW
+5515,201705515,2017,Münster,9.200000000000001,Nordrhein-Westfalen,NW
+5554,201305554,2013,Kreis Borken,5.9,Nordrhein-Westfalen,NW
+5554,201705554,2017,Kreis Borken,6.300000000000001,Nordrhein-Westfalen,NW
+5558,201305558,2013,Kreis Coesfeld,5.1000000000000005,Nordrhein-Westfalen,NW
+5558,201705558,2017,Kreis Coesfeld,6.1000000000000005,Nordrhein-Westfalen,NW
+5562,201305562,2013,Kreis Recklinghausen,13.100000000000001,Nordrhein-Westfalen,NW
+5562,201705562,2017,Kreis Recklinghausen,14.600000000000001,Nordrhein-Westfalen,NW
+5566,201305566,2013,Kreis Steinfurt,6.7,Nordrhein-Westfalen,NW
+5566,201705566,2017,Kreis Steinfurt,7.5,Nordrhein-Westfalen,NW
+5570,201305570,2013,Kreis Warendorf,7.1000000000000005,Nordrhein-Westfalen,NW
+5570,201705570,2017,Kreis Warendorf,8.1,Nordrhein-Westfalen,NW
+5711,201305711,2013,Bielefeld,12.8,Nordrhein-Westfalen,NW
+5711,201705711,2017,Bielefeld,13.9,Nordrhein-Westfalen,NW
+5754,201305754,2013,Kreis Gütersloh,6.4,Nordrhein-Westfalen,NW
+5754,201705754,2017,Kreis Gütersloh,7.1000000000000005,Nordrhein-Westfalen,NW
+5758,201305758,2013,Kreis Herford,8.0,Nordrhein-Westfalen,NW
+5758,201705758,2017,Kreis Herford,8.8,Nordrhein-Westfalen,NW
+5762,201305762,2013,Kreis Höxter,5.9,Nordrhein-Westfalen,NW
+5762,201705762,2017,Kreis Höxter,6.6000000000000005,Nordrhein-Westfalen,NW
+5766,201305766,2013,Kreis Lippe,9.3,Nordrhein-Westfalen,NW
+5766,201705766,2017,Kreis Lippe,9.9,Nordrhein-Westfalen,NW
+5770,201305770,2013,Kreis Minden-Lübbecke,8.700000000000001,Nordrhein-Westfalen,NW
+5770,201705770,2017,Kreis Minden-Lübbecke,9.700000000000001,Nordrhein-Westfalen,NW
+5774,201305774,2013,Kreis Paderborn,8.1,Nordrhein-Westfalen,NW
+5774,201705774,2017,Kreis Paderborn,8.8,Nordrhein-Westfalen,NW
+5911,201305911,2013,Bochum,12.8,Nordrhein-Westfalen,NW
+5911,201705911,2017,Bochum,14.700000000000001,Nordrhein-Westfalen,NW
+5913,201305913,2013,Dortmund,16.400000000000002,Nordrhein-Westfalen,NW
+5913,201705913,2017,Dortmund,18.0,Nordrhein-Westfalen,NW
+5914,201305914,2013,Hagen,14.5,Nordrhein-Westfalen,NW
+5914,201705914,2017,Hagen,17.2,Nordrhein-Westfalen,NW
+5915,201305915,2013,Hamm,13.600000000000001,Nordrhein-Westfalen,NW
+5915,201705915,2017,Hamm,13.3,Nordrhein-Westfalen,NW
+5916,201305916,2013,Herne,15.3,Nordrhein-Westfalen,NW
+5916,201705916,2017,Herne,17.7,Nordrhein-Westfalen,NW
+5954,201305954,2013,Ennepe-Ruhr-Kreis,9.700000000000001,Nordrhein-Westfalen,NW
+5954,201705954,2017,Ennepe-Ruhr-Kreis,10.8,Nordrhein-Westfalen,NW
+5958,201305958,2013,Hochsauerlandkreis,6.7,Nordrhein-Westfalen,NW
+5958,201705958,2017,Hochsauerlandkreis,7.4,Nordrhein-Westfalen,NW
+5962,201305962,2013,Märkischer Kreis,9.3,Nordrhein-Westfalen,NW
+5962,201705962,2017,Märkischer Kreis,10.100000000000001,Nordrhein-Westfalen,NW
+5966,201305966,2013,Kreis Olpe,5.4,Nordrhein-Westfalen,NW
+5966,201705966,2017,Kreis Olpe,5.9,Nordrhein-Westfalen,NW
+5970,201305970,2013,Kreis Siegen-Wittgenstein,6.9,Nordrhein-Westfalen,NW
+5970,201705970,2017,Kreis Siegen-Wittgenstein,8.200000000000001,Nordrhein-Westfalen,NW
+5974,201305974,2013,Kreis Soest,7.300000000000001,Nordrhein-Westfalen,NW
+5974,201705974,2017,Kreis Soest,8.1,Nordrhein-Westfalen,NW
+5978,201305978,2013,Kreis Unna,11.4,Nordrhein-Westfalen,NW
+5978,201705978,2017,Kreis Unna,11.700000000000001,Nordrhein-Westfalen,NW
+6411,201306411,2013,Darmstadt,10.600000000000001,Hessen,HE
+6411,201706411,2017,Darmstadt,11.9,Hessen,HE
+6412,201306412,2013,Frankfurt (Main),12.600000000000001,Hessen,HE
+6412,201706412,2017,Frankfurt (Main),12.600000000000001,Hessen,HE
+6413,201306413,2013,Offenbach am Main,18.7,Hessen,HE
+6413,201706413,2017,Offenbach am Main,16.6,Hessen,HE
+6414,201306414,2013,Wiesbaden,13.600000000000001,Hessen,HE
+6414,201706414,2017,Wiesbaden,14.700000000000001,Hessen,HE
+6431,201306431,2013,Landkreis Bergstrasse,6.300000000000001,Hessen,HE
+6431,201706431,2017,Landkreis Bergstrasse,7.300000000000001,Hessen,HE
+6432,201306432,2013,Landkreis Darmstadt-Dieburg,6.5,Hessen,HE
+6432,201706432,2017,Landkreis Darmstadt-Dieburg,6.9,Hessen,HE
+6433,201306433,2013,Landkreis Groß-Gerau,9.0,Hessen,HE
+6433,201706433,2017,Landkreis Groß-Gerau,9.600000000000001,Hessen,HE
+6434,201306434,2013,Hochtaunuskreis,5.0,Hessen,HE
+6434,201706434,2017,Hochtaunuskreis,6.300000000000001,Hessen,HE
+6435,201306435,2013,Main-Kinzig-Kreis,7.4,Hessen,HE
+6435,201706435,2017,Main-Kinzig-Kreis,8.1,Hessen,HE
+6436,201306436,2013,Main-Taunus-Kreis,5.4,Hessen,HE
+6436,201706436,2017,Main-Taunus-Kreis,6.300000000000001,Hessen,HE
+6437,201306437,2013,Odenwaldkreis,7.2,Hessen,HE
+6437,201706437,2017,Odenwaldkreis,7.2,Hessen,HE
+6438,201306438,2013,Landkreis Offenbach,8.0,Hessen,HE
+6438,201706438,2017,Landkreis Offenbach,8.3,Hessen,HE
+6439,201306439,2013,Rheingau-Taunus-Kreis,5.2,Hessen,HE
+6439,201706439,2017,Rheingau-Taunus-Kreis,6.800000000000001,Hessen,HE
+6440,201306440,2013,Wetteraukreis,6.300000000000001,Hessen,HE
+6440,201706440,2017,Wetteraukreis,7.1000000000000005,Hessen,HE
+6531,201306531,2013,Landkreis Gießen,9.200000000000001,Hessen,HE
+6531,201706531,2017,Landkreis Gießen,10.8,Hessen,HE
+6532,201306532,2013,Lahn-Dill Kreis,8.1,Hessen,HE
+6532,201706532,2017,Lahn-Dill Kreis,9.0,Hessen,HE
+6533,201306533,2013,Landkreis Limburg-Weilburg,7.7,Hessen,HE
+6533,201706533,2017,Landkreis Limburg-Weilburg,8.5,Hessen,HE
+6534,201306534,2013,Landkreis Marburg-Biedenkopf,6.300000000000001,Hessen,HE
+6534,201706534,2017,Landkreis Marburg-Biedenkopf,7.300000000000001,Hessen,HE
+6535,201306535,2013,Vogelsbergkreis,5.5,Hessen,HE
+6535,201706535,2017,Vogelsbergkreis,6.300000000000001,Hessen,HE
+6611,201306611,2013,Kassel,13.8,Hessen,HE
+6611,201706611,2017,Kassel,15.700000000000001,Hessen,HE
+6631,201306631,2013,Landkreis Fulda,5.6000000000000005,Hessen,HE
+6631,201706631,2017,Landkreis Fulda,6.0,Hessen,HE
+6632,201306632,2013,Landkreis Hersfeld-Rotenburg,6.2,Hessen,HE
+6632,201706632,2017,Landkreis Hersfeld-Rotenburg,6.5,Hessen,HE
+6633,201306633,2013,Landkreis Kassel (Land),5.9,Hessen,HE
+6633,201706633,2017,Landkreis Kassel (Land),6.6000000000000005,Hessen,HE
+6634,201306634,2013,Schwalm-Eder Kreis,6.0,Hessen,HE
+6634,201706634,2017,Schwalm-Eder Kreis,6.800000000000001,Hessen,HE
+6635,201306635,2013,Landkreis Waldeck-Frankenberg,5.9,Hessen,HE
+6635,201706635,2017,Landkreis Waldeck-Frankenberg,6.9,Hessen,HE
+6636,201306636,2013,Werra-Meißner Kreis,8.4,Hessen,HE
+6636,201706636,2017,Werra-Meißner Kreis,9.0,Hessen,HE
+7111,201307111,2013,Koblenz,9.8,Rheinland-Pfalz,RP
+7111,201707111,2017,Koblenz,11.4,Rheinland-Pfalz,RP
+7131,201307131,2013,Landkreis Ahrweiler,5.1000000000000005,Rheinland-Pfalz,RP
+7131,201707131,2017,Landkreis Ahrweiler,6.0,Rheinland-Pfalz,RP
+7132,201307132,2013,Landkreis Altenkirchen (Westerwald),6.300000000000001,Rheinland-Pfalz,RP
+7132,201707132,2017,Landkreis Altenkirchen (Westerwald),6.300000000000001,Rheinland-Pfalz,RP
+7133,201307133,2013,Landkreis Bad Kreuznach,8.0,Rheinland-Pfalz,RP
+7133,201707133,2017,Landkreis Bad Kreuznach,8.4,Rheinland-Pfalz,RP
+7134,201307134,2013,Landkreis Birkenfeld,7.800000000000001,Rheinland-Pfalz,RP
+7134,201707134,2017,Landkreis Birkenfeld,8.1,Rheinland-Pfalz,RP
+7135,201307135,2013,Landkreis Cochem-Zell,4.5,Rheinland-Pfalz,RP
+7135,201707135,2017,Landkreis Cochem-Zell,5.4,Rheinland-Pfalz,RP
+7137,201307137,2013,Landkreis Mayen-Koblenz,6.300000000000001,Rheinland-Pfalz,RP
+7137,201707137,2017,Landkreis Mayen-Koblenz,6.7,Rheinland-Pfalz,RP
+7138,201307138,2013,Landkreis Neuwied,7.1000000000000005,Rheinland-Pfalz,RP
+7138,201707138,2017,Landkreis Neuwied,8.0,Rheinland-Pfalz,RP
+7140,201307140,2013,Rhein-Hunsrück-Kreis,4.5,Rheinland-Pfalz,RP
+7140,201707140,2017,Rhein-Hunsrück-Kreis,5.4,Rheinland-Pfalz,RP
+7141,201307141,2013,Rhein-Lahn-Kreis,5.6000000000000005,Rheinland-Pfalz,RP
+7141,201707141,2017,Rhein-Lahn-Kreis,6.4,Rheinland-Pfalz,RP
+7143,201307143,2013,Westerwaldkreis,4.800000000000001,Rheinland-Pfalz,RP
+7143,201707143,2017,Westerwaldkreis,5.2,Rheinland-Pfalz,RP
+7211,201307211,2013,Trier,8.200000000000001,Rheinland-Pfalz,RP
+7211,201707211,2017,Trier,11.5,Rheinland-Pfalz,RP
+7231,201307231,2013,Landkreis Bernkastel-Wittlich,4.3,Rheinland-Pfalz,RP
+7231,201707231,2017,Landkreis Bernkastel-Wittlich,5.2,Rheinland-Pfalz,RP
+7232,201307232,2013,Eifelkreis Bitburg-Prüm,3.5,Rheinland-Pfalz,RP
+7232,201707232,2017,Eifelkreis Bitburg-Prüm,4.3,Rheinland-Pfalz,RP
+7233,201307233,2013,Landkreis Vulkaneifel,4.9,Rheinland-Pfalz,RP
+7233,201707233,2017,Landkreis Vulkaneifel,5.2,Rheinland-Pfalz,RP
+7235,201307235,2013,Landkreis Trier-Saarburg,3.3000000000000003,Rheinland-Pfalz,RP
+7235,201707235,2017,Landkreis Trier-Saarburg,4.0,Rheinland-Pfalz,RP
+7311,201307311,2013,Frankenthal (Pfalz),9.600000000000001,Rheinland-Pfalz,RP
+7311,201707311,2017,Frankenthal (Pfalz),9.8,Rheinland-Pfalz,RP
+7312,201307312,2013,Kaiserslautern,12.8,Rheinland-Pfalz,RP
+7312,201707312,2017,Kaiserslautern,14.200000000000001,Rheinland-Pfalz,RP
+7313,201307313,2013,Landau in der Pfalz,6.800000000000001,Rheinland-Pfalz,RP
+7313,201707313,2017,Landau in der Pfalz,7.9,Rheinland-Pfalz,RP
+7314,201307314,2013,Ludwigshafen am Rhein,13.9,Rheinland-Pfalz,RP
+7314,201707314,2017,Ludwigshafen am Rhein,14.9,Rheinland-Pfalz,RP
+7315,201307315,2013,Mainz,8.5,Rheinland-Pfalz,RP
+7315,201707315,2017,Mainz,9.4,Rheinland-Pfalz,RP
+7316,201307316,2013,Neustadt an der Weinstrasse,8.0,Rheinland-Pfalz,RP
+7316,201707316,2017,Neustadt an der Weinstrasse,9.0,Rheinland-Pfalz,RP
+7317,201307317,2013,Pirmasens,14.8,Rheinland-Pfalz,RP
+7317,201707317,2017,Pirmasens,16.5,Rheinland-Pfalz,RP
+7318,201307318,2013,Speyer,8.4,Rheinland-Pfalz,RP
+7318,201707318,2017,Speyer,8.6,Rheinland-Pfalz,RP
+7319,201307319,2013,Worms,11.5,Rheinland-Pfalz,RP
+7319,201707319,2017,Worms,12.4,Rheinland-Pfalz,RP
+7320,201307320,2013,Zweibrücken,9.0,Rheinland-Pfalz,RP
+7320,201707320,2017,Zweibrücken,9.600000000000001,Rheinland-Pfalz,RP
+7331,201307331,2013,Landkreis Alzey-Worms,5.300000000000001,Rheinland-Pfalz,RP
+7331,201707331,2017,Landkreis Alzey-Worms,6.0,Rheinland-Pfalz,RP
+7332,201307332,2013,Landkreis Bad Dürkheim,4.7,Rheinland-Pfalz,RP
+7332,201707332,2017,Landkreis Bad Dürkheim,5.6000000000000005,Rheinland-Pfalz,RP
+7333,201307333,2013,Donnersbergkreis,6.4,Rheinland-Pfalz,RP
+7333,201707333,2017,Donnersbergkreis,6.800000000000001,Rheinland-Pfalz,RP
+7334,201307334,2013,Landkreis Germersheim,5.5,Rheinland-Pfalz,RP
+7334,201707334,2017,Landkreis Germersheim,6.2,Rheinland-Pfalz,RP
+7335,201307335,2013,Landkreis Kaiserslautern (Land),5.800000000000001,Rheinland-Pfalz,RP
+7335,201707335,2017,Landkreis Kaiserslautern (Land),6.6000000000000005,Rheinland-Pfalz,RP
+7336,201307336,2013,Landkreis Kusel,6.5,Rheinland-Pfalz,RP
+7336,201707336,2017,Landkreis Kusel,6.800000000000001,Rheinland-Pfalz,RP
+7337,201307337,2013,Landkreis Südliche Weinstrasse,4.4,Rheinland-Pfalz,RP
+7337,201707337,2017,Landkreis Südliche Weinstrasse,5.4,Rheinland-Pfalz,RP
+7338,201307338,2013,Rhein-Pfalz-Kreis,3.8000000000000003,Rheinland-Pfalz,RP
+7338,201707338,2017,Rhein-Pfalz-Kreis,4.5,Rheinland-Pfalz,RP
+7339,201307339,2013,Landkreis Mainz-Bingen,4.800000000000001,Rheinland-Pfalz,RP
+7339,201707339,2017,Landkreis Mainz-Bingen,5.5,Rheinland-Pfalz,RP
+7340,201307340,2013,Landkreis Südwestpfalz,3.7,Rheinland-Pfalz,RP
+7340,201707340,2017,Landkreis Südwestpfalz,4.1000000000000005,Rheinland-Pfalz,RP
+8111,201308111,2013,Stuttgart,8.0,Baden-Württemberg,BW
+8111,201708111,2017,Stuttgart,8.700000000000001,Baden-Württemberg,BW
+8115,201308115,2013,Landkreis Böblingen,4.0,Baden-Württemberg,BW
+8115,201708115,2017,Landkreis Böblingen,4.6000000000000005,Baden-Württemberg,BW
+8116,201308116,2013,Landkreis Esslingen,4.6000000000000005,Baden-Württemberg,BW
+8116,201708116,2017,Landkreis Esslingen,5.300000000000001,Baden-Württemberg,BW
+8117,201308117,2013,Landkreis Göppingen,5.0,Baden-Württemberg,BW
+8117,201708117,2017,Landkreis Göppingen,6.1000000000000005,Baden-Württemberg,BW
+8118,201308118,2013,Landkreis Ludwigsburg,4.4,Baden-Württemberg,BW
+8118,201708118,2017,Landkreis Ludwigsburg,4.9,Baden-Württemberg,BW
+8119,201308119,2013,Rems-Murr-Kreis,5.0,Baden-Württemberg,BW
+8119,201708119,2017,Rems-Murr-Kreis,6.1000000000000005,Baden-Württemberg,BW
+8121,201308121,2013,Heilbronn,8.0,Baden-Württemberg,BW
+8121,201708121,2017,Heilbronn,8.8,Baden-Württemberg,BW
+8125,201308125,2013,Landkreis Heilbronn (Land),3.8000000000000003,Baden-Württemberg,BW
+8125,201708125,2017,Landkreis Heilbronn (Land),4.800000000000001,Baden-Württemberg,BW
+8126,201308126,2013,Hohenlohekreis,3.0,Baden-Württemberg,BW
+8126,201708126,2017,Hohenlohekreis,3.3000000000000003,Baden-Württemberg,BW
+8127,201308127,2013,Landkreis Schwäbisch Hall,4.2,Baden-Württemberg,BW
+8127,201708127,2017,Landkreis Schwäbisch Hall,4.9,Baden-Württemberg,BW
+8128,201308128,2013,Main-Tauber-Kreis,3.5,Baden-Württemberg,BW
+8128,201708128,2017,Main-Tauber-Kreis,4.3,Baden-Württemberg,BW
+8135,201308135,2013,Landkreis Heidenheim,5.5,Baden-Württemberg,BW
+8135,201708135,2017,Landkreis Heidenheim,6.7,Baden-Württemberg,BW
+8136,201308136,2013,Ostalbkreis,4.3,Baden-Württemberg,BW
+8136,201708136,2017,Ostalbkreis,4.6000000000000005,Baden-Württemberg,BW
+8211,201308211,2013,Baden-Baden,7.1000000000000005,Baden-Württemberg,BW
+8211,201708211,2017,Baden-Baden,7.800000000000001,Baden-Württemberg,BW
+8212,201308212,2013,Karlsruhe,7.7,Baden-Württemberg,BW
+8212,201708212,2017,Karlsruhe,7.2,Baden-Württemberg,BW
+8215,201308215,2013,Landkreis Karlsruhe (Land),3.5,Baden-Württemberg,BW
+8215,201708215,2017,Landkreis Karlsruhe (Land),4.3,Baden-Württemberg,BW
+8216,201308216,2013,Landkreis Rastatt,4.1000000000000005,Baden-Württemberg,BW
+8216,201708216,2017,Landkreis Rastatt,4.800000000000001,Baden-Württemberg,BW
+8221,201308221,2013,Heidelberg,5.9,Baden-Württemberg,BW
+8221,201708221,2017,Heidelberg,6.300000000000001,Baden-Württemberg,BW
+8222,201308222,2013,Mannheim,10.8,Baden-Württemberg,BW
+8222,201708222,2017,Mannheim,11.5,Baden-Württemberg,BW
+8225,201308225,2013,Neckar-Odenwald-Kreis,4.4,Baden-Württemberg,BW
+8225,201708225,2017,Neckar-Odenwald-Kreis,4.9,Baden-Württemberg,BW
+8226,201308226,2013,Rhein-Neckar-Kreis,4.9,Baden-Württemberg,BW
+8226,201708226,2017,Rhein-Neckar-Kreis,5.800000000000001,Baden-Württemberg,BW
+8231,201308231,2013,Pforzheim,10.5,Baden-Württemberg,BW
+8231,201708231,2017,Pforzheim,11.5,Baden-Württemberg,BW
+8235,201308235,2013,Landkreis Calw,3.8000000000000003,Baden-Württemberg,BW
+8235,201708235,2017,Landkreis Calw,4.3,Baden-Württemberg,BW
+8236,201308236,2013,Enzkreis,2.7,Baden-Württemberg,BW
+8236,201708236,2017,Enzkreis,3.6,Baden-Württemberg,BW
+8237,201308237,2013,Landkreis Freudenstadt,3.5,Baden-Württemberg,BW
+8237,201708237,2017,Landkreis Freudenstadt,4.4,Baden-Württemberg,BW
+8311,201308311,2013,Freiburg im Breisgau,8.9,Baden-Württemberg,BW
+8311,201708311,2017,Freiburg im Breisgau,9.1,Baden-Württemberg,BW
+8315,201308315,2013,Landkreis Breisgau-Hochschwarzwald,4.0,Baden-Württemberg,BW
+8315,201708315,2017,Landkreis Breisgau-Hochschwarzwald,4.7,Baden-Württemberg,BW
+8316,201308316,2013,Landkreis Emmendingen,4.0,Baden-Württemberg,BW
+8316,201708316,2017,Landkreis Emmendingen,4.800000000000001,Baden-Württemberg,BW
+8317,201308317,2013,Ortenaukreis,4.800000000000001,Baden-Württemberg,BW
+8317,201708317,2017,Ortenaukreis,5.300000000000001,Baden-Württemberg,BW
+8325,201308325,2013,Landkreis Rottweil,3.6,Baden-Württemberg,BW
+8325,201708325,2017,Landkreis Rottweil,4.3,Baden-Württemberg,BW
+8326,201308326,2013,Schwarzwald-Baar-Kreis,4.7,Baden-Württemberg,BW
+8326,201708326,2017,Schwarzwald-Baar-Kreis,5.0,Baden-Württemberg,BW
+8327,201308327,2013,Landkreis Tuttlingen,3.9000000000000004,Baden-Württemberg,BW
+8327,201708327,2017,Landkreis Tuttlingen,4.6000000000000005,Baden-Württemberg,BW
+8335,201308335,2013,Landkreis Konstanz,5.0,Baden-Württemberg,BW
+8335,201708335,2017,Landkreis Konstanz,5.7,Baden-Württemberg,BW
+8336,201308336,2013,Landkreis Lörrach,4.800000000000001,Baden-Württemberg,BW
+8336,201708336,2017,Landkreis Lörrach,5.2,Baden-Württemberg,BW
+8337,201308337,2013,Landkreis Waldshut,3.8000000000000003,Baden-Württemberg,BW
+8337,201708337,2017,Landkreis Waldshut,4.5,Baden-Württemberg,BW
+8415,201308415,2013,Landkreis Reutlingen,4.9,Baden-Württemberg,BW
+8415,201708415,2017,Landkreis Reutlingen,5.9,Baden-Württemberg,BW
+8416,201308416,2013,Landkreis Tübingen,4.1000000000000005,Baden-Württemberg,BW
+8416,201708416,2017,Landkreis Tübingen,4.7,Baden-Württemberg,BW
+8417,201308417,2013,Zollernalbkreis,4.2,Baden-Württemberg,BW
+8417,201708417,2017,Zollernalbkreis,3.8000000000000003,Baden-Württemberg,BW
+8421,201308421,2013,Ulm,5.7,Baden-Württemberg,BW
+8421,201708421,2017,Ulm,6.6000000000000005,Baden-Württemberg,BW
+8425,201308425,2013,Alb-Donau-Kreis,2.7,Baden-Württemberg,BW
+8425,201708425,2017,Alb-Donau-Kreis,3.5,Baden-Württemberg,BW
+8426,201308426,2013,Landkreis Biberach,2.8000000000000003,Baden-Württemberg,BW
+8426,201708426,2017,Landkreis Biberach,3.9000000000000004,Baden-Württemberg,BW
+8435,201308435,2013,Bodenseekreis,3.5,Baden-Württemberg,BW
+8435,201708435,2017,Bodenseekreis,4.6000000000000005,Baden-Württemberg,BW
+8436,201308436,2013,Landkreis Ravensburg,3.9000000000000004,Baden-Württemberg,BW
+8436,201708436,2017,Landkreis Ravensburg,4.7,Baden-Württemberg,BW
+8437,201308437,2013,Landkreis Sigmaringen,3.9000000000000004,Baden-Württemberg,BW
+8437,201708437,2017,Landkreis Sigmaringen,4.5,Baden-Württemberg,BW
+9161,201309161,2013,Ingolstadt,5.7,Bayern,BY
+9161,201709161,2017,Ingolstadt,6.800000000000001,Bayern,BY
+9162,201309162,2013,München,6.800000000000001,Bayern,BY
+9162,201709162,2017,München,7.0,Bayern,BY
+9163,201309163,2013,Rosenheim,6.800000000000001,Bayern,BY
+9163,201709163,2017,Rosenheim,7.4,Bayern,BY
+9171,201309171,2013,Landkreis Altötting,4.3,Bayern,BY
+9171,201709171,2017,Landkreis Altötting,5.1000000000000005,Bayern,BY
+9172,201309172,2013,Landkreis Berchtesgadener Land,3.6,Bayern,BY
+9172,201709172,2017,Landkreis Berchtesgadener Land,4.2,Bayern,BY
+9173,201309173,2013,Landkreis Bad Tölz-Wolfratshausen,3.2,Bayern,BY
+9173,201709173,2017,Landkreis Bad Tölz-Wolfratshausen,4.1000000000000005,Bayern,BY
+9174,201309174,2013,Landkreis Dachau,2.9000000000000004,Bayern,BY
+9174,201709174,2017,Landkreis Dachau,3.2,Bayern,BY
+9175,201309175,2013,Landkreis Ebersberg,2.2,Bayern,BY
+9175,201709175,2017,Landkreis Ebersberg,2.6,Bayern,BY
+9176,201309176,2013,Landkreis Eichstätt,1.2000000000000002,Bayern,BY
+9176,201709176,2017,Landkreis Eichstätt,2.6,Bayern,BY
+9177,201309177,2013,Landkreis Erding,2.6,Bayern,BY
+9177,201709177,2017,Landkreis Erding,3.1,Bayern,BY
+9178,201309178,2013,Landkreis Freising,1.8,Bayern,BY
+9178,201709178,2017,Landkreis Freising,2.6,Bayern,BY
+9179,201309179,2013,Landkreis Fürstenfeldbruck,3.7,Bayern,BY
+9179,201709179,2017,Landkreis Fürstenfeldbruck,4.6000000000000005,Bayern,BY
+9180,201309180,2013,Landkreis Garmisch-Partenkirchen,3.8000000000000003,Bayern,BY
+9180,201709180,2017,Landkreis Garmisch-Partenkirchen,5.1000000000000005,Bayern,BY
+9181,201309181,2013,Landkreis Landsberg am Lech,2.7,Bayern,BY
+9181,201709181,2017,Landkreis Landsberg am Lech,3.5,Bayern,BY
+9182,201309182,2013,Landkreis Miesbach,2.6,Bayern,BY
+9182,201709182,2017,Landkreis Miesbach,2.8000000000000003,Bayern,BY
+9183,201309183,2013,Landkreis Mühldorf am Inn,4.6000000000000005,Bayern,BY
+9183,201709183,2017,Landkreis Mühldorf am Inn,5.6000000000000005,Bayern,BY
+9184,201309184,2013,Landkreis München (Land),2.9000000000000004,Bayern,BY
+9184,201709184,2017,Landkreis München (Land),3.7,Bayern,BY
+9185,201309185,2013,Landkreis Neuburg-Schrobenhausen,2.6,Bayern,BY
+9185,201709185,2017,Landkreis Neuburg-Schrobenhausen,3.1,Bayern,BY
+9186,201309186,2013,Landkreis Pfaffenhofen an der Ilm,1.8,Bayern,BY
+9186,201709186,2017,Landkreis Pfaffenhofen an der Ilm,2.6,Bayern,BY
+9187,201309187,2013,Landkreis Rosenheim (Land),2.8000000000000003,Bayern,BY
+9187,201709187,2017,Landkreis Rosenheim (Land),3.5,Bayern,BY
+9188,201309188,2013,Landkreis Starnberg,2.5,Bayern,BY
+9188,201709188,2017,Landkreis Starnberg,3.6,Bayern,BY
+9189,201309189,2013,Landkreis Traunstein,3.4000000000000004,Bayern,BY
+9189,201709189,2017,Landkreis Traunstein,3.9000000000000004,Bayern,BY
+9190,201309190,2013,Landkreis Weilheim-Schongau,3.3000000000000003,Bayern,BY
+9190,201709190,2017,Landkreis Weilheim-Schongau,4.2,Bayern,BY
+9261,201309261,2013,Landshut,5.800000000000001,Bayern,BY
+9261,201709261,2017,Landshut,6.5,Bayern,BY
+9262,201309262,2013,Passau,6.6000000000000005,Bayern,BY
+9262,201709262,2017,Passau,7.5,Bayern,BY
+9263,201309263,2013,Straubing,9.3,Bayern,BY
+9263,201709263,2017,Straubing,9.200000000000001,Bayern,BY
+9271,201309271,2013,Landkreis Deggendorf,4.1000000000000005,Bayern,BY
+9271,201709271,2017,Landkreis Deggendorf,4.1000000000000005,Bayern,BY
+9272,201309272,2013,Landkreis Freyung-Grafenau,2.9000000000000004,Bayern,BY
+9272,201709272,2017,Landkreis Freyung-Grafenau,2.8000000000000003,Bayern,BY
+9273,201309273,2013,Landkreis Kehlheim,1.9000000000000001,Bayern,BY
+9273,201709273,2017,Landkreis Kehlheim,2.9000000000000004,Bayern,BY
+9274,201309274,2013,Landkreis Landshut (Land),2.2,Bayern,BY
+9274,201709274,2017,Landkreis Landshut (Land),2.7,Bayern,BY
+9275,201309275,2013,Landkreis Passau (Land),3.5,Bayern,BY
+9275,201709275,2017,Landkreis Passau (Land),4.3,Bayern,BY
+9276,201309276,2013,Landkreis Regen,3.2,Bayern,BY
+9276,201709276,2017,Landkreis Regen,4.3,Bayern,BY
+9277,201309277,2013,Landkreis Rottal-Inn,3.1,Bayern,BY
+9277,201709277,2017,Landkreis Rottal-Inn,3.9000000000000004,Bayern,BY
+9278,201309278,2013,Landkreis Straubing-Bogen,2.6,Bayern,BY
+9278,201709278,2017,Landkreis Straubing-Bogen,2.8000000000000003,Bayern,BY
+9279,201309279,2013,Landkreis Dingolfing-Landau,2.1,Bayern,BY
+9279,201709279,2017,Landkreis Dingolfing-Landau,2.8000000000000003,Bayern,BY
+9361,201309361,2013,Amberg,7.7,Bayern,BY
+9361,201709361,2017,Amberg,8.9,Bayern,BY
+9362,201309362,2013,Regensburg,7.0,Bayern,BY
+9362,201709362,2017,Regensburg,7.1000000000000005,Bayern,BY
+9363,201309363,2013,Weiden in der Oberpfalz,10.8,Bayern,BY
+9363,201709363,2017,Weiden in der Oberpfalz,10.5,Bayern,BY
+9371,201309371,2013,Landkreis Amberg-Sulzbach,3.2,Bayern,BY
+9371,201709371,2017,Landkreis Amberg-Sulzbach,3.6,Bayern,BY
+9372,201309372,2013,Landkreis Cham,2.7,Bayern,BY
+9372,201709372,2017,Landkreis Cham,3.4000000000000004,Bayern,BY
+9373,201309373,2013,Landkreis Neumarkt in der Oberpfalz,2.4000000000000004,Bayern,BY
+9373,201709373,2017,Landkreis Neumarkt in der Oberpfalz,3.0,Bayern,BY
+9374,201309374,2013,Landkreis Neustadt an der Waldnaab,3.5,Bayern,BY
+9374,201709374,2017,Landkreis Neustadt an der Waldnaab,4.0,Bayern,BY
+9375,201309375,2013,Landkreis Regensburg (Land),2.3000000000000003,Bayern,BY
+9375,201709375,2017,Landkreis Regensburg (Land),2.9000000000000004,Bayern,BY
+9376,201309376,2013,Landkreis Schwandorf,3.3000000000000003,Bayern,BY
+9376,201709376,2017,Landkreis Schwandorf,4.0,Bayern,BY
+9377,201309377,2013,Landkreis Tirschenreuth,3.8000000000000003,Bayern,BY
+9377,201709377,2017,Landkreis Tirschenreuth,3.9000000000000004,Bayern,BY
+9461,201309461,2013,Bamberg,6.300000000000001,Bayern,BY
+9461,201709461,2017,Bamberg,8.4,Bayern,BY
+9462,201309462,2013,Bayreuth,8.200000000000001,Bayern,BY
+9462,201709462,2017,Bayreuth,8.1,Bayern,BY
+9463,201309463,2013,Coburg,7.800000000000001,Bayern,BY
+9463,201709463,2017,Coburg,8.5,Bayern,BY
+9464,201309464,2013,Hof,11.9,Bayern,BY
+9464,201709464,2017,Hof,14.3,Bayern,BY
+9471,201309471,2013,Landkreis Bamberg (Land),2.2,Bayern,BY
+9471,201709471,2017,Landkreis Bamberg (Land),2.6,Bayern,BY
+9472,201309472,2013,Landkreis Bayreuth (Land),2.7,Bayern,BY
+9472,201709472,2017,Landkreis Bayreuth (Land),3.0,Bayern,BY
+9473,201309473,2013,Landkreis Coburg (Land),3.6,Bayern,BY
+9473,201709473,2017,Landkreis Coburg (Land),4.3,Bayern,BY
+9474,201309474,2013,Landkreis Forchheim,2.9000000000000004,Bayern,BY
+9474,201709474,2017,Landkreis Forchheim,3.6,Bayern,BY
+9475,201309475,2013,Landkreis Hof (Land),4.4,Bayern,BY
+9475,201709475,2017,Landkreis Hof (Land),4.6000000000000005,Bayern,BY
+9476,201309476,2013,Landkreis Kronach,3.4000000000000004,Bayern,BY
+9476,201709476,2017,Landkreis Kronach,3.6,Bayern,BY
+9477,201309477,2013,Landkreis Kulmbach,4.6000000000000005,Bayern,BY
+9477,201709477,2017,Landkreis Kulmbach,4.7,Bayern,BY
+9478,201309478,2013,Landkreis Lichtenfels,4.1000000000000005,Bayern,BY
+9478,201709478,2017,Landkreis Lichtenfels,4.7,Bayern,BY
+9479,201309479,2013,Landkreis Wunsiedel im Fichtelgebirge,6.2,Bayern,BY
+9479,201709479,2017,Landkreis Wunsiedel im Fichtelgebirge,7.2,Bayern,BY
+9561,201309561,2013,Ansbach,7.7,Bayern,BY
+9561,201709561,2017,Ansbach,9.8,Bayern,BY
+9562,201309562,2013,Erlangen,5.300000000000001,Bayern,BY
+9562,201709562,2017,Erlangen,6.0,Bayern,BY
+9563,201309563,2013,Fürth,8.700000000000001,Bayern,BY
+9563,201709563,2017,Fürth,9.3,Bayern,BY
+9564,201309564,2013,Nürnberg,11.3,Bayern,BY
+9564,201709564,2017,Nürnberg,11.4,Bayern,BY
+9565,201309565,2013,Schwabach,5.7,Bayern,BY
+9565,201709565,2017,Schwabach,6.5,Bayern,BY
+9571,201309571,2013,Landkreis Ansbach (Land),2.9000000000000004,Bayern,BY
+9571,201709571,2017,Landkreis Ansbach (Land),3.1,Bayern,BY
+9572,201309572,2013,Landkreis Erlangen-Höchstadt,2.1,Bayern,BY
+9572,201709572,2017,Landkreis Erlangen-Höchstadt,2.9000000000000004,Bayern,BY
+9573,201309573,2013,Landkreis Fürth (Land),3.6,Bayern,BY
+9573,201709573,2017,Landkreis Fürth (Land),2.7,Bayern,BY
+9574,201309574,2013,Landkreis Nürnberger Land,2.9000000000000004,Bayern,BY
+9574,201709574,2017,Landkreis Nürnberger Land,3.9000000000000004,Bayern,BY
+9575,201309575,2013,Landkreis Neustadt an der Aisch-Bad Windsheim,3.1,Bayern,BY
+9575,201709575,2017,Landkreis Neustadt an der Aisch-Bad Windsheim,4.0,Bayern,BY
+9576,201309576,2013,Landkreis Roth,2.9000000000000004,Bayern,BY
+9576,201709576,2017,Landkreis Roth,3.4000000000000004,Bayern,BY
+9577,201309577,2013,Landkreis Weißenburg-Gunzenhausen,3.9000000000000004,Bayern,BY
+9577,201709577,2017,Landkreis Weißenburg-Gunzenhausen,4.7,Bayern,BY
+9661,201309661,2013,Aschaffenburg,9.200000000000001,Bayern,BY
+9661,201709661,2017,Aschaffenburg,10.3,Bayern,BY
+9662,201309662,2013,Schweinfurt,11.3,Bayern,BY
+9662,201709662,2017,Schweinfurt,13.200000000000001,Bayern,BY
+9663,201309663,2013,Würzburg,7.300000000000001,Bayern,BY
+9663,201709663,2017,Würzburg,7.800000000000001,Bayern,BY
+9671,201309671,2013,Landkreis Aschaffenburg (Land),3.0,Bayern,BY
+9671,201709671,2017,Landkreis Aschaffenburg (Land),4.0,Bayern,BY
+9672,201309672,2013,Landkreis Bad Kissingen,4.0,Bayern,BY
+9672,201709672,2017,Landkreis Bad Kissingen,4.4,Bayern,BY
+9673,201309673,2013,Landkreis Rhön-Grabfeld,3.0,Bayern,BY
+9673,201709673,2017,Landkreis Rhön-Grabfeld,3.7,Bayern,BY
+9674,201309674,2013,Landkreis Haßberge,3.2,Bayern,BY
+9674,201709674,2017,Landkreis Haßberge,3.6,Bayern,BY
+9675,201309675,2013,Landkreis Kitzingen,3.4000000000000004,Bayern,BY
+9675,201709675,2017,Landkreis Kitzingen,3.7,Bayern,BY
+9676,201309676,2013,Landkreis Miltenberg,3.6,Bayern,BY
+9676,201709676,2017,Landkreis Miltenberg,4.0,Bayern,BY
+9677,201309677,2013,Landkreis Main-Spessart,2.5,Bayern,BY
+9677,201709677,2017,Landkreis Main-Spessart,3.2,Bayern,BY
+9678,201309678,2013,Landkreis Schweinfurt (Land),2.4000000000000004,Bayern,BY
+9678,201709678,2017,Landkreis Schweinfurt (Land),3.1,Bayern,BY
+9679,201309679,2013,Landkreis Würzburg (Land),2.5,Bayern,BY
+9679,201709679,2017,Landkreis Würzburg (Land),3.1,Bayern,BY
+9761,201309761,2013,Augsburg,7.9,Bayern,BY
+9761,201709761,2017,Augsburg,7.800000000000001,Bayern,BY
+9762,201309762,2013,Kaufbeuren,6.800000000000001,Bayern,BY
+9762,201709762,2017,Kaufbeuren,7.4,Bayern,BY
+9763,201309763,2013,Kempten (Allgäu),6.0,Bayern,BY
+9763,201709763,2017,Kempten (Allgäu),6.6000000000000005,Bayern,BY
+9764,201309764,2013,Memmingen,4.3,Bayern,BY
+9764,201709764,2017,Memmingen,4.9,Bayern,BY
+9771,201309771,2013,Landkreis Aichach-Friedberg,2.1,Bayern,BY
+9771,201709771,2017,Landkreis Aichach-Friedberg,2.7,Bayern,BY
+9772,201309772,2013,Landkreis Augsburg Land,2.7,Bayern,BY
+9772,201709772,2017,Landkreis Augsburg Land,3.4000000000000004,Bayern,BY
+9773,201309773,2013,Landkreis Dillingen an der Donau,3.2,Bayern,BY
+9773,201709773,2017,Landkreis Dillingen an der Donau,4.2,Bayern,BY
+9774,201309774,2013,Landkreis Günzburg,3.3000000000000003,Bayern,BY
+9774,201709774,2017,Landkreis Günzburg,3.6,Bayern,BY
+9775,201309775,2013,Landkreis Neu-Ulm,3.8000000000000003,Bayern,BY
+9775,201709775,2017,Landkreis Neu-Ulm,4.0,Bayern,BY
+9776,201309776,2013,Landkreis Lindau (Bodensee),3.2,Bayern,BY
+9776,201709776,2017,Landkreis Lindau (Bodensee),3.9000000000000004,Bayern,BY
+9777,201309777,2013,Landkreis Ostallgäu,2.0,Bayern,BY
+9777,201709777,2017,Landkreis Ostallgäu,2.9000000000000004,Bayern,BY
+9778,201309778,2013,Landkreis Unterallgäu,1.7000000000000002,Bayern,BY
+9778,201709778,2017,Landkreis Unterallgäu,2.5,Bayern,BY
+9779,201309779,2013,Landkreis Donau-Ries,2.2,Bayern,BY
+9779,201709779,2017,Landkreis Donau-Ries,3.0,Bayern,BY
+9780,201309780,2013,Landkreis Oberallgäu,2.5,Bayern,BY
+9780,201709780,2017,Landkreis Oberallgäu,2.9000000000000004,Bayern,BY
+10041,201310041,2013,Regionalverband Saarbrücken,13.3,Saarland,SL
+10041,201710041,2017,Regionalverband Saarbrücken,15.5,Saarland,SL
+10042,201310042,2013,Landkreis Merzig-Wadern,5.300000000000001,Saarland,SL
+10042,201710042,2017,Landkreis Merzig-Wadern,6.7,Saarland,SL
+10043,201310043,2013,Landkreis Neunkirchen,9.3,Saarland,SL
+10043,201710043,2017,Landkreis Neunkirchen,11.4,Saarland,SL
+10044,201310044,2013,Landkreis Saarlouis,7.6000000000000005,Saarland,SL
+10044,201710044,2017,Landkreis Saarlouis,8.200000000000001,Saarland,SL
+10045,201310045,2013,Saarpfalz-Kreis,6.300000000000001,Saarland,SL
+10045,201710045,2017,Saarpfalz-Kreis,7.800000000000001,Saarland,SL
+10046,201310046,2013,Landkreis St. Wendel,5.0,Saarland,SL
+10046,201710046,2017,Landkreis St. Wendel,5.7,Saarland,SL
+12051,201312051,2013,Brandenburg an der Havel,16.3,Brandenburg,BB
+12051,201712051,2017,Brandenburg an der Havel,14.9,Brandenburg,BB
+12052,201312052,2013,Cottbus,14.4,Brandenburg,BB
+12052,201712052,2017,Cottbus,14.700000000000001,Brandenburg,BB
+12053,201312053,2013,Frankfurt (Oder),16.900000000000002,Brandenburg,BB
+12053,201712053,2017,Frankfurt (Oder),15.4,Brandenburg,BB
+12054,201312054,2013,Potsdam,9.9,Brandenburg,BB
+12054,201712054,2017,Potsdam,9.600000000000001,Brandenburg,BB
+12060,201312060,2013,Landkreis Barnim,10.200000000000001,Brandenburg,BB
+12060,201712060,2017,Landkreis Barnim,8.6,Brandenburg,BB
+12061,201312061,2013,Landkreis Dahme-Spreewald,8.200000000000001,Brandenburg,BB
+12061,201712061,2017,Landkreis Dahme-Spreewald,6.7,Brandenburg,BB
+12062,201312062,2013,Landkreis Elbe-Elster,11.5,Brandenburg,BB
+12062,201712062,2017,Landkreis Elbe-Elster,9.600000000000001,Brandenburg,BB
+12063,201312063,2013,Landkreis Havelland,9.8,Brandenburg,BB
+12063,201712063,2017,Landkreis Havelland,8.0,Brandenburg,BB
+12064,201312064,2013,Landkreis Märkisch-Oderland,10.8,Brandenburg,BB
+12064,201712064,2017,Landkreis Märkisch-Oderland,8.3,Brandenburg,BB
+12065,201312065,2013,Landkreis Oberhavel,9.4,Brandenburg,BB
+12065,201712065,2017,Landkreis Oberhavel,7.7,Brandenburg,BB
+12066,201312066,2013,Landkreis Oberspreewald-Lausitz,13.3,Brandenburg,BB
+12066,201712066,2017,Landkreis Oberspreewald-Lausitz,11.5,Brandenburg,BB
+12067,201312067,2013,Landkreis Oder-Spree,11.9,Brandenburg,BB
+12067,201712067,2017,Landkreis Oder-Spree,10.3,Brandenburg,BB
+12068,201312068,2013,Landkreis Ostprignitz-Ruppin,13.9,Brandenburg,BB
+12068,201712068,2017,Landkreis Ostprignitz-Ruppin,11.100000000000001,Brandenburg,BB
+12069,201312069,2013,Landkreis Potsdam-Mittelmark,6.1000000000000005,Brandenburg,BB
+12069,201712069,2017,Landkreis Potsdam-Mittelmark,5.0,Brandenburg,BB
+12070,201312070,2013,Landkreis Prignitz,14.100000000000001,Brandenburg,BB
+12070,201712070,2017,Landkreis Prignitz,12.3,Brandenburg,BB
+12071,201312071,2013,Landkreis Spree-Neiße,11.4,Brandenburg,BB
+12071,201712071,2017,Landkreis Spree-Neiße,9.4,Brandenburg,BB
+12072,201312072,2013,Landkreis Teltow-Fläming,8.8,Brandenburg,BB
+12072,201712072,2017,Landkreis Teltow-Fläming,7.6000000000000005,Brandenburg,BB
+12073,201312073,2013,Landkreis Uckermark,16.8,Brandenburg,BB
+12073,201712073,2017,Landkreis Uckermark,14.9,Brandenburg,BB
+13001,201313001,2013,Greifswald,,Mecklenburg-Vorpommern,MV
+13001,201713001,2017,Greifswald,,Mecklenburg-Vorpommern,MV
+13002,201313002,2013,Neubrandenburg,,Mecklenburg-Vorpommern,MV
+13002,201713002,2017,Neubrandenburg,,Mecklenburg-Vorpommern,MV
+13003,201313003,2013,Rostock,14.8,Mecklenburg-Vorpommern,MV
+13003,201713003,2017,Rostock,13.100000000000001,Mecklenburg-Vorpommern,MV
+13004,201313004,2013,Schwerin,16.6,Mecklenburg-Vorpommern,MV
+13004,201713004,2017,Schwerin,15.600000000000001,Mecklenburg-Vorpommern,MV
+13005,201313005,2013,Stralsund,,Mecklenburg-Vorpommern,MV
+13005,201713005,2017,Stralsund,,Mecklenburg-Vorpommern,MV
+13006,201313006,2013,Wismar,,Mecklenburg-Vorpommern,MV
+13006,201713006,2017,Wismar,,Mecklenburg-Vorpommern,MV
+13051,201313051,2013,Landkreis Bad Doberan,,Mecklenburg-Vorpommern,MV
+13051,201713051,2017,Landkreis Bad Doberan,,Mecklenburg-Vorpommern,MV
+13052,201313052,2013,Landkreis Demmin,,Mecklenburg-Vorpommern,MV
+13052,201713052,2017,Landkreis Demmin,,Mecklenburg-Vorpommern,MV
+13053,201313053,2013,Landkreis Güstrow,,Mecklenburg-Vorpommern,MV
+13053,201713053,2017,Landkreis Güstrow,,Mecklenburg-Vorpommern,MV
+13054,201313054,2013,Landkreis Ludwigslust,,Mecklenburg-Vorpommern,MV
+13054,201713054,2017,Landkreis Ludwigslust,,Mecklenburg-Vorpommern,MV
+13055,201313055,2013,Landkreis Mecklenburg-Strelitz,,Mecklenburg-Vorpommern,MV
+13055,201713055,2017,Landkreis Mecklenburg-Strelitz,,Mecklenburg-Vorpommern,MV
+13056,201313056,2013,Landkreis Müritz,,Mecklenburg-Vorpommern,MV
+13056,201713056,2017,Landkreis Müritz,,Mecklenburg-Vorpommern,MV
+13057,201313057,2013,Landkreis Nordvorpommern,,Mecklenburg-Vorpommern,MV
+13057,201713057,2017,Landkreis Nordvorpommern,,Mecklenburg-Vorpommern,MV
+13058,201313058,2013,Landkreis Nordwestmecklenburg,,Mecklenburg-Vorpommern,MV
+13058,201713058,2017,Landkreis Nordwestmecklenburg,,Mecklenburg-Vorpommern,MV
+13059,201313059,2013,Landkreis Ostvorpommern,,Mecklenburg-Vorpommern,MV
+13059,201713059,2017,Landkreis Ostvorpommern,,Mecklenburg-Vorpommern,MV
+13060,201313060,2013,Landkreis Parchim,,Mecklenburg-Vorpommern,MV
+13060,201713060,2017,Landkreis Parchim,,Mecklenburg-Vorpommern,MV
+13061,201313061,2013,Landkreis Rügen,,Mecklenburg-Vorpommern,MV
+13061,201713061,2017,Landkreis Rügen,,Mecklenburg-Vorpommern,MV
+13062,201313062,2013,Landkreis Uecker-Randow,,Mecklenburg-Vorpommern,MV
+13062,201713062,2017,Landkreis Uecker-Randow,,Mecklenburg-Vorpommern,MV
+13071,201313071,2013,Landkreis Mecklenburgische Seenplatte,14.600000000000001,Mecklenburg-Vorpommern,MV
+13071,201713071,2017,Landkreis Mecklenburgische Seenplatte,12.4,Mecklenburg-Vorpommern,MV
+13072,201313072,2013,Landkreis Rostock,10.600000000000001,Mecklenburg-Vorpommern,MV
+13072,201713072,2017,Landkreis Rostock,8.6,Mecklenburg-Vorpommern,MV
+13073,201313073,2013,Landkreis Vorpommern-Rügen,13.600000000000001,Mecklenburg-Vorpommern,MV
+13073,201713073,2017,Landkreis Vorpommern-Rügen,11.100000000000001,Mecklenburg-Vorpommern,MV
+13074,201313074,2013,Landkreis Nordwestmecklenburg,10.700000000000001,Mecklenburg-Vorpommern,MV
+13074,201713074,2017,Landkreis Nordwestmecklenburg,8.9,Mecklenburg-Vorpommern,MV
+13075,201313075,2013,Landkreis Vorpommern-Greifswald,15.0,Mecklenburg-Vorpommern,MV
+13075,201713075,2017,Landkreis Vorpommern-Greifswald,11.9,Mecklenburg-Vorpommern,MV
+13076,201313076,2013,Landkreis Ludwigslust-Parchim,10.4,Mecklenburg-Vorpommern,MV
+13076,201713076,2017,Landkreis Ludwigslust-Parchim,8.8,Mecklenburg-Vorpommern,MV
+14511,201314511,2013,Chemnitz,11.9,Sachsen,SN
+14511,201714511,2017,Chemnitz,11.0,Sachsen,SN
+14521,201314521,2013,Erzgebirgskreis,8.700000000000001,Sachsen,SN
+14521,201714521,2017,Erzgebirgskreis,6.2,Sachsen,SN
+14522,201314522,2013,Landkreis Mittelsachsen,8.6,Sachsen,SN
+14522,201714522,2017,Landkreis Mittelsachsen,6.6000000000000005,Sachsen,SN
+14523,201314523,2013,Vogtlandkreis,8.6,Sachsen,SN
+14523,201714523,2017,Vogtlandkreis,7.300000000000001,Sachsen,SN
+14524,201314524,2013,Kreis Zwickau,9.0,Sachsen,SN
+14524,201714524,2017,Kreis Zwickau,7.4,Sachsen,SN
+14612,201314612,2013,Dresden,10.200000000000001,Sachsen,SN
+14612,201714612,2017,Dresden,9.4,Sachsen,SN
+14625,201314625,2013,Landkreis Bautzen,9.600000000000001,Sachsen,SN
+14625,201714625,2017,Landkreis Bautzen,7.2,Sachsen,SN
+14626,201314626,2013,Landkreis Görlitz,12.700000000000001,Sachsen,SN
+14626,201714626,2017,Landkreis Görlitz,10.4,Sachsen,SN
+14627,201314627,2013,Landkreis Meissen,9.700000000000001,Sachsen,SN
+14627,201714627,2017,Landkreis Meissen,7.6000000000000005,Sachsen,SN
+14628,201314628,2013,Landkreis Sächsische Schweiz-Osterzgebirge,9.1,Sachsen,SN
+14628,201714628,2017,Landkreis Sächsische Schweiz-Osterzgebirge,7.0,Sachsen,SN
+14713,201314713,2013,Leipzig,14.3,Sachsen,SN
+14713,201714713,2017,Leipzig,12.600000000000001,Sachsen,SN
+14729,201314729,2013,Landkreis Leipzig,10.0,Sachsen,SN
+14729,201714729,2017,Landkreis Leipzig,7.800000000000001,Sachsen,SN
+14730,201314730,2013,Landkreis Nordsachsen,11.3,Sachsen,SN
+14730,201714730,2017,Landkreis Nordsachsen,9.3,Sachsen,SN
+15001,201315001,2013,Dessau-Rosslau,13.600000000000001,Sachsen-Anhalt,ST
+15001,201715001,2017,Dessau-Rosslau,12.200000000000001,Sachsen-Anhalt,ST
+15002,201315002,2013,Halle (Saale),16.400000000000002,Sachsen-Anhalt,ST
+15002,201715002,2017,Halle (Saale),16.6,Sachsen-Anhalt,ST
+15003,201315003,2013,Magdeburg,14.9,Sachsen-Anhalt,ST
+15003,201715003,2017,Magdeburg,14.5,Sachsen-Anhalt,ST
+15081,201315081,2013,Altmarkkreis Salzwedel,10.9,Sachsen-Anhalt,ST
+15081,201715081,2017,Altmarkkreis Salzwedel,9.8,Sachsen-Anhalt,ST
+15082,201315082,2013,Landkreis Anhalt-Bitterfeld,13.700000000000001,Sachsen-Anhalt,ST
+15082,201715082,2017,Landkreis Anhalt-Bitterfeld,11.4,Sachsen-Anhalt,ST
+15083,201315083,2013,Landkreis Börde,9.700000000000001,Sachsen-Anhalt,ST
+15083,201715083,2017,Landkreis Börde,7.9,Sachsen-Anhalt,ST
+15084,201315084,2013,Burgenlandkreis,13.4,Sachsen-Anhalt,ST
+15084,201715084,2017,Burgenlandkreis,11.100000000000001,Sachsen-Anhalt,ST
+15085,201315085,2013,Landkreis Harz,11.8,Sachsen-Anhalt,ST
+15085,201715085,2017,Landkreis Harz,9.4,Sachsen-Anhalt,ST
+15086,201315086,2013,Landkreis Jerichower Land,11.3,Sachsen-Anhalt,ST
+15086,201715086,2017,Landkreis Jerichower Land,9.200000000000001,Sachsen-Anhalt,ST
+15087,201315087,2013,Landkreis Mansfeld-Südharz,14.4,Sachsen-Anhalt,ST
+15087,201715087,2017,Landkreis Mansfeld-Südharz,12.700000000000001,Sachsen-Anhalt,ST
+15088,201315088,2013,Saalekreis,12.100000000000001,Sachsen-Anhalt,ST
+15088,201715088,2017,Saalekreis,10.0,Sachsen-Anhalt,ST
+15089,201315089,2013,Salzlandkreis,15.100000000000001,Sachsen-Anhalt,ST
+15089,201715089,2017,Salzlandkreis,12.4,Sachsen-Anhalt,ST
+15090,201315090,2013,Landkreis Stendal,15.4,Sachsen-Anhalt,ST
+15090,201715090,2017,Landkreis Stendal,13.200000000000001,Sachsen-Anhalt,ST
+15091,201315091,2013,Landkreis Wittenberg,11.8,Sachsen-Anhalt,ST
+15091,201715091,2017,Landkreis Wittenberg,10.0,Sachsen-Anhalt,ST
+16051,201316051,2013,Erfurt,12.700000000000001,Thüringen,TH
+16051,201716051,2017,Erfurt,11.200000000000001,Thüringen,TH
+16052,201316052,2013,Gera,13.5,Thüringen,TH
+16052,201716052,2017,Gera,13.9,Thüringen,TH
+16053,201316053,2013,Jena,7.7,Thüringen,TH
+16053,201716053,2017,Jena,7.9,Thüringen,TH
+16054,201316054,2013,Suhl,8.6,Thüringen,TH
+16054,201716054,2017,Suhl,7.2,Thüringen,TH
+16055,201316055,2013,Weimar,11.0,Thüringen,TH
+16055,201716055,2017,Weimar,10.100000000000001,Thüringen,TH
+16056,201316056,2013,Eisenach,11.600000000000001,Thüringen,TH
+16056,201716056,2017,Eisenach,11.0,Thüringen,TH
+16061,201316061,2013,Landkreis Eichsfeld,5.7,Thüringen,TH
+16061,201716061,2017,Landkreis Eichsfeld,5.2,Thüringen,TH
+16062,201316062,2013,Landkreis Nordhausen,11.3,Thüringen,TH
+16062,201716062,2017,Landkreis Nordhausen,10.100000000000001,Thüringen,TH
+16063,201316063,2013,Landkreis Wartburgkreis,5.4,Thüringen,TH
+16063,201716063,2017,Landkreis Wartburgkreis,4.9,Thüringen,TH
+16064,201316064,2013,Landkreis Unstrut-Hainich-Kreis,10.8,Thüringen,TH
+16064,201716064,2017,Landkreis Unstrut-Hainich-Kreis,9.8,Thüringen,TH
+16065,201316065,2013,Landkreis Kyffhäuserkreis,11.9,Thüringen,TH
+16065,201716065,2017,Landkreis Kyffhäuserkreis,10.8,Thüringen,TH
+16066,201316066,2013,Landkreis Schmalkalden-Meiningen,6.0,Thüringen,TH
+16066,201716066,2017,Landkreis Schmalkalden-Meiningen,5.0,Thüringen,TH
+16067,201316067,2013,Landkreis Gotha,8.700000000000001,Thüringen,TH
+16067,201716067,2017,Landkreis Gotha,7.5,Thüringen,TH
+16068,201316068,2013,Landkreis Sömmerda,8.9,Thüringen,TH
+16068,201716068,2017,Landkreis Sömmerda,7.2,Thüringen,TH
+16069,201316069,2013,Landkreis Hildburghausen,5.1000000000000005,Thüringen,TH
+16069,201716069,2017,Landkreis Hildburghausen,4.7,Thüringen,TH
+16070,201316070,2013,Landkreis Ilm-Kreis,9.1,Thüringen,TH
+16070,201716070,2017,Landkreis Ilm-Kreis,8.200000000000001,Thüringen,TH
+16071,201316071,2013,Landkreis Weimarer Land,8.1,Thüringen,TH
+16071,201716071,2017,Landkreis Weimarer Land,6.9,Thüringen,TH
+16072,201316072,2013,Landkreis Sonneberg,5.6000000000000005,Thüringen,TH
+16072,201716072,2017,Landkreis Sonneberg,5.2,Thüringen,TH
+16073,201316073,2013,Landkreis Saalfeld-Rudolstadt,8.5,Thüringen,TH
+16073,201716073,2017,Landkreis Saalfeld-Rudolstadt,7.4,Thüringen,TH
+16074,201316074,2013,Landkreis Saale-Holzland-Kreis,7.5,Thüringen,TH
+16074,201716074,2017,Landkreis Saale-Holzland-Kreis,5.4,Thüringen,TH
+16075,201316075,2013,Landkreis Saale-Orla-Kreis,7.300000000000001,Thüringen,TH
+16075,201716075,2017,Landkreis Saale-Orla-Kreis,6.4,Thüringen,TH
+16076,201316076,2013,Landkreis Greiz,7.9,Thüringen,TH
+16076,201716076,2017,Landkreis Greiz,6.4,Thüringen,TH
+16077,201316077,2013,Landkreis Altenburger Land,11.600000000000001,Thüringen,TH
+16077,201716077,2017,Landkreis Altenburger Land,10.3,Thüringen,TH
+3241001,201303241001,2013,Landeshauptstadt Hannover,15.9,Niedersachsen,NI
+3241001,201703241001,2017,Landeshauptstadt Hannover,15.8,Niedersachsen,NI
+10041100,201310041100,2013,Landeshauptstadt Saarbrücken,16.7,Saarland,SL
+10041100,201710041100,2017,Landeshauptstadt Saarbrücken,19.1,Saarland,SL
+11001001,201311001001,2013,Berlin-Mitte,,Berlin,BE
+11001001,201711001001,2017,Berlin-Mitte,,Berlin,BE
+11002002,201311002002,2013,Berlin-Friedrichshain-Kreuzberg,,Berlin,BE
+11002002,201711002002,2017,Berlin-Friedrichshain-Kreuzberg,,Berlin,BE
+11003003,201311003003,2013,Berlin-Pankow,,Berlin,BE
+11003003,201711003003,2017,Berlin-Pankow,,Berlin,BE
+11004004,201311004004,2013,Berlin-Charlottenburg-Wilmersdorf,,Berlin,BE
+11004004,201711004004,2017,Berlin-Charlottenburg-Wilmersdorf,,Berlin,BE
+11005005,201311005005,2013,Berlin-Spandau,,Berlin,BE
+11005005,201711005005,2017,Berlin-Spandau,,Berlin,BE
+11006006,201311006006,2013,Berlin-Steglitz-Zehlendorf,,Berlin,BE
+11006006,201711006006,2017,Berlin-Steglitz-Zehlendorf,,Berlin,BE
+11007007,201311007007,2013,Berlin-Tempelhof-Schöneberg,,Berlin,BE
+11007007,201711007007,2017,Berlin-Tempelhof-Schöneberg,,Berlin,BE
+11008008,201311008008,2013,Berlin-Neukölln,,Berlin,BE
+11008008,201711008008,2017,Berlin-Neukölln,,Berlin,BE
+11009009,201311009009,2013,Berlin-Treptow-Köpenick,,Berlin,BE
+11009009,201711009009,2017,Berlin-Treptow-Köpenick,,Berlin,BE
+11010010,201311010010,2013,Berlin-Marzahn-Hellersdorf,,Berlin,BE
+11010010,201711010010,2017,Berlin-Marzahn-Hellersdorf,,Berlin,BE
+11011011,201311011011,2013,Berlin-Lichtenberg,,Berlin,BE
+11011011,201711011011,2017,Berlin-Lichtenberg,,Berlin,BE
+11012012,201311012012,2013,Berlin-Reinickendorf,,Berlin,BE
+11012012,201711012012,2017,Berlin-Reinickendorf,,Berlin,BE
