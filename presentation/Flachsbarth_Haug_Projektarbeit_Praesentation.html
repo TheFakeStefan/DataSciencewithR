@@ -1,0 +1,1243 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+  <head>
+    <title>Analyse der Bundestagswahlen 1990 - 2017</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="  Stefan Flachsbarth, Martin Haug" />
+    <meta name="date" content="2019-10-22" />
+    <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link href="libs/remark-css-0.0.1/metropolis.css" rel="stylesheet" />
+    <link href="libs/remark-css-0.0.1/metropolis-fonts.css" rel="stylesheet" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# Analyse der Bundestagswahlen 1990 - 2017
+## inkl. Strukturdaten und Presseberichterstattung
+### <br/><br/>Stefan Flachsbarth, Martin Haug
+### 2019-10-22
+
+---
+
+&lt;div class="hdm"&gt;&lt;/div&gt;
+
+# Agenda
+
+
+- Zielsetzung der Arbeit
+- Aufbau der Projektarbeit
+- Datenvorbereitung (Wahl, Struktur, Presse)
+- Visualisierungen
+  - Deskriptive &amp; Explorative Statistik
+  - Visualisierung mit Karten
+- Text Mining
+  - Text Mining
+  - Sentiment Analyse
+  - Visualisierung (Shiny/Elasticsearch)
+- Resümee &amp; Ausblick
+- Manöverkritik
+- Github Repository &amp; Quellen
+
+---
+&lt;div class="hdm"&gt;&lt;/div&gt;
+
+# Zielsetzung der Arbeit
+
+
+- Aufbau auf Projektarbeit 'Programming for Data Science'
+- Erweiterung: Analyse von Presseberichten
+- Anwendung gelernter Inhalte
+  - SQL-Datenbanken (PostgreSQL) und SQL-Queries
+  - Datenaufbereiten in R
+  - Funktionen und Iterationen in R
+  - Unterschiede Python vs. R verstehen
+  - Deskriptive und explorative Statistik
+  - Nutzung von Join-Funktionen
+  - Visualisierung mit Karten
+  - Interaktiven Grafiken
+- Exploration nicht explizit im Kurs behandelter Inhalte
+- Interpretation der Ergebnisse
+
+---
+&lt;div class="hdm"&gt;&lt;/div&gt;
+
+# Aufbau der Projektarbeit
+
+** Struktur der Arbeit**
+- Teil 1 : Laden und Aufbereiten der Wahldaten
+- Teil 2 : Laden und Aufbereiten der Strukturdaten
+- Teil 3 : Laden und Aufbereiten der Pressetexte
+- Teil 4 : Visualisierungen Wahl-/Strukturdaten: Deskriptive &amp; explorative Statistik
+- Teil 5 : Visualisierung mit Karten
+- Teil 6 : Text Mining Grundlagen
+- Teil 7 : Text Mining Sentiment Analyse
+- Teil 8 : Visualisierung mit shiny
+- Teil 9 : Visualisierung mit Elasticsearch
+
+**Datenquellen**
+- Wahldaten: [Bundeswahlleiter](https://www.bundeswahlleiter.de/bundestagswahlen/2017/ergebnisse.html) 
+- Strukturdaten: [Statistisches Bundesamt](https://www-genesis.destatis.de/gis/genView?GenMLURL=https://www-genesis.destatis.de/regatlas/AI-Z4-2011.xml&amp;CONTEXT=REGATLAS01)
+- Presseberichte: [WISO-Datenbank](https://www.wiso-net.de/dosearch/:3:ALLEQUELLEN-106_:3:PRESSE)
+
+---
+&lt;div class="hdm"&gt;&lt;/div&gt;
+
+# Datenvorbereitung
+
+![](https://raw.githubusercontent.com/TheFakeStefan/DataSciencewithR/master/images/presentation/Bundestag.jpg)
+
+---
+&lt;div class="hdm"&gt;&lt;/div&gt;
+
+# Wahldaten
+
+.pull-left[
+
+**Datenvorbereitung**
+- Daten im Excel-Format (einzelne Files pro Wahl)
+- Ergänzen von zusätzlichen Spalten &amp; berechneten Werten
+- Anpassung von Datentypen
+- Konsolidierung des Datensatzes
+- Schreiben der Daten in SQL-Datenbank
+]
+
+.pull-right[
+**Besonderheiten**
+- Einsatz von **Funktionen vs. Iterationen**
+- Umwandeln von Datentypen aufwendig (**string -&gt; numeric**)
+- Standardisierung mit Hilfe von Masterdaten (JOIN)
+- Schreiben und Lesen von **Umlauten** problematisch
+- **Varianten** von Funktionen (Veränderung des Parteienspektrums)
+]
+
+---
+&lt;div class="hdm"&gt;&lt;/div&gt;
+
+# Wahldaten
+
+
+
+
+```r
+# Wahldaten 2013 - Datenvorbereitung
+df &lt;- read_excel("Bundestagswahl_2013.xlsx")
+df$Wahljahr &lt;- "2013"
+dfin_2013 &lt;- df%&gt;%
+  cleanup01()%&gt;%
+  cleanup02()%&gt;%
+  cleanup03()%&gt;%
+  cleanup04()%&gt;%
+  mutate(Check = `UNIONPZ`+`SPDPZ` + `LINPZ` + `GRUPZ` + `FDPPZ` + `AFDPZ`)
+head(dfin_2013,10)
+```
+
+---
+&lt;div class="hdm"&gt;&lt;/div&gt;
+
+# Strukturdaten
+
+.pull-left[
+**Datenvorbereitung**
+- Daten im Excel-Format (einzelne Files pro Thema)
+- Fehlende Werte unterschiedlich kodiert
+- Umformungen und Umrechnungen sehr aufwendig
+- Aggregationen entfernen
+- Doppelte Daten entfernen
+- Einzelne Werte berichtigen
+- Schreiben der Daten in SQL-Datenbank
+]
+
+.pull-right[
+**Besonderheiten**
+- **Geschachtelte Funktionen**
+- Umwandeln von Datentypen aufwendig (**string -&gt; numeric**)
+- Standardisierung über **Masterdaten (join)**
+- Schreiben und Lesen von **Umlauten** problematisch
+- Unterschiede **MacOS und Windows**
+]
+
+---
+&lt;div class="hdm"&gt;&lt;/div&gt;
+
+# Strukturdaten
+
+
+```r
+# Funktion, um die doppelt vorhandenen Landkreise zu eliminieren
+altekreise &lt;- function(stdf){
+  stdf &lt;- filter(stdf, Schluessel %notin% c("3152","14161","14166","14167", "..."))
+  return(stdf) }
+
+# Funktion, um die Strukturdaten mit den Stadt-/Landkreis-Masterdaten zu verknüpfen
+lkrmaster &lt;- function(stdf){
+  stdf02 &lt;- left_join(stdf, STLAID_Master, by=c("Schluessel" = "LKR_NR"))
+  stdf02$'Stadt-/Landkreis' &lt;- stdf02$'LKR_NAME'
+  stdfin &lt;- select(stdf02, -'Name', -'LKR_NAME', -'LAND_NR')
+  return(stdfin) }
+
+# Zusammenführen aller Teilfunktionen zu einer Gesamtfunktion
+strukturprep &lt;- function(stdf, length){
+  stdfkrz &lt;- transform02(stdf)
+  stdfintro &lt;- transform03(stdf)
+  stdf &lt;- transform04(stdfkrz,stdfintro)
+  stdf &lt;- transform05(stdf)
+  stdf &lt;- aggloeschen(stdf)
+  stdf &lt;- hamburg(stdf)
+  stdf &lt;- altekreise(stdf)
+  stdf &lt;- lkrmaster(stdf)
+  return(stdf) }
+```
+
+---
+&lt;div class="hdm"&gt;&lt;/div&gt;
+
+# Presseberichte
+
+.pull-left[
+**Datenvorbereitung**
+- Daten liegen im CSV &amp; HTML-Format vor (Files mit je 50 Artikeln)
+- Extraktion der Texte aus HTML Code
+- Aufteilung des Textkorpus in Segmente (Headline, Autor, Text)
+- Extraktion des Erscheinungsdatums aus komplexem Text
+- Error Handling für fehlende Werte
+- Schreiben der Daten in die SQL-Datenbank
+]
+
+.pull-right[
+**Besonderheiten**
+- Schreiben und Lesen von **Umlauten** problematisch
+- Unterschiede **MacOS und Windows**
+]
+
+---
+&lt;div class="hdm"&gt;&lt;/div&gt;
+
+# Presseberichte
+
+
+```r
+# Definition einer Funktion, um die Daten in die SQL-Datenbank zu schreiben
+WriteMyData &lt;- function(table_name, table_content) {
+  # Verbindung initialisieren
+  con &lt;- dbConnect(RPostgreSQL::PostgreSQL(),
+    host = 'hdm-sql.think-data.de', 
+    dbname = 'postgres',
+    user = 'postgres',
+    password = rstudioapi::askForPassword("Datenbank Password: ")
+    )
+  
+  # Daten in die Datenbank schreiben
+  dbWriteTable(con, table_name, as.data.frame(table_content), overwrite = TRUE)
+  
+  # Lesen der geschriebenen Daten
+  return(dbReadTable(con, table_name))
+  
+  # Verbindung lösen
+  dbDisconnect(con)
+}
+```
+
+---
+
+&lt;div class="hdm"&gt;&lt;/div&gt;
+
+# PostgreSQL Datenbank
+
+
+- **Wahldaten**: eine Tabelle pro Wahljahr
+
+- **Strukturdaten**: eine Tabelle pro Thema (Daten mehrerer Jahre)
+
+- **Presseberichte**: eine Tabelle pro Wahljahr
+
+![](https://raw.githubusercontent.com/TheFakeStefan/DataSciencewithR/master/images/presentation/Image_wahldaten.PNG)
+
+
+---
+
+&lt;div class="hdm"&gt;&lt;/div&gt;
+
+# Visualisierung
+
+![](https://raw.githubusercontent.com/TheFakeStefan/DataSciencewithR/master/images/presentation/shinydashboards.PNG)
+
+---
+
+&lt;div class="hdm"&gt;&lt;/div&gt;
+
+# Visualisierung (Wahl-/Strukturdaten)
+
+
+**Beantwortung typischer politischer Fragestellungen**
+- Welche Ergebnisse konnte die CSU bei der Bundestagswahl 2017 in den bayerischen Wahlkreisen erzielen?
+- Welcher Kandidat hat im Wahlkreis Stuttgart das Direktmandat geholt?
+- Wie haben sich die Ergebnisse der Parteien in Ostdeutschland im Zeitraum 1990- 2017 entwickelt?
+
+**Vorgehensweise**
+  - Datenextraktion
+  - Visualisierung mit ggplot
+  - Verschiedene Visualisierungsarten: Balken- und Liniendiagramm
+  - Interpretation der Ergebnisse
+
+---
+
+&lt;div class="hdm"&gt;&lt;/div&gt;
+
+# Visualisierung (Wahl-/Strukturdaten)
+
+**Welcher Kandidat hat im Wahlkreis Stuttgart das Direktmandat geholt?**
+
+--
+
+
+```r
+# Zusammenführen der beiden Stuttgarter Wahlkreise in einen Datensatz
+stuttgart &lt;- bind_rows(stuttgart1, stuttgart2)
+
+# Umstrukturierung der Datentabelle
+stuttgart.long&lt;-melt(stuttgart,id.vars="WKRNAME")
+
+# Visualisierung der Ergebnisse in Form eines Barcharts
+ggplot(stuttgart.long, aes(x=variable,y=value,fill=factor(WKRNAME)))+
+  geom_bar(stat="identity",position="dodge")+
+  scale_fill_discrete(name="WKRNAME",
+                      breaks=c("Stuttgart I", "Stuttgart II"),
+                      labels=c("Stuttgart I", "Stuttgart II"))+
+  xlab("Partei")+ylab("Wählerstimmen")+
+  theme_classic(base_size=7) +
+  labs(title="Erstwählerstimmen in den beiden Stuttgarter Wahlkreisen")
+```
+
+---
+
+&lt;div class="hdm"&gt;&lt;/div&gt;
+
+# Visualisierung (Wahl-/Strukturdaten)
+
+![](https://raw.githubusercontent.com/TheFakeStefan/DataSciencewithR/master/images/presentation/stuttgartneu.PNG)
+
+---
+
+&lt;div class="hdm"&gt;&lt;/div&gt;
+
+# Visualisierung (Wahl-/Strukturdaten)
+
+**Wie haben sich die Ergebnisse der Parteien in Ostdeutschland im Zeitraum 1990- 2017 entwickelt?**
+
+--
+
+
+```r
+# Verbinden der einzelnen Datensätze aus den jeweiligen Wahljahren
+ostwahl &lt;- rbind(Ost2017, Ost2013, Ost2009, Ost2005, 
+                 Ost2002, Ost1998, Ost1994, Ost1990)
+
+ostwahl &lt;- ostwahl%&gt;%
+  filter(WKRNAME=="Leipzig I")%&gt;%
+  select(Wahljahr, CDUPZ, SPDPZ, GRUPZ, LINPZ, AFDPZ, FDPPZ)
+
+# Umwandlung des Datensatz zur Vorbereitung der Visualisierung
+ostwahl.long &lt;- melt(ostwahl,id.vars="Wahljahr")
+ostwahl &lt;- ostwahl.long
+
+# Visualisierung der Daten mit Hilfe einen Liniendiagramms
+ggplot(ostwahl, aes(x=Wahljahr, y=value, color=variable)) +
+  geom_line() +
+  theme_classic() +
+  expand_limits(y=0)
+```
+
+---
+
+&lt;div class="hdm"&gt;&lt;/div&gt;
+
+# Visualisierung (Wahl-/Strukturdaten)
+
+![](https://raw.githubusercontent.com/TheFakeStefan/DataSciencewithR/master/images/presentation/ostwaehlerneu.PNG)
+
+
+---
+
+&lt;div class="hdm"&gt;&lt;/div&gt;
+
+# Visualisierung (Wahl-/Strukturdaten)
+
+**Entwicklung der Bruttoeinkommen in Deutschland - - - 1995 - 2017** 
+
+--
+
+
+```r
+# Histogramm für 1995
+plot1995 &lt;- ggplot(bruttoeinkomm1995, aes(Bruttoentgelte)) +
+  geom_histogram(bins = 50) +
+  theme_classic() +
+  labs(title="1995", x="Bruttoeinkommen in EUR", y="# LKR")
+
+# Tabelle im Format 3 Spalten x 2 Zeilen
+require(gridExtra)
+grid.arrange(plot1995, plot2000, plot2005, plot2009, plot2013, plot2017, ncol=3)
+```
+
+---
+
+&lt;div class="hdm"&gt;&lt;/div&gt;
+
+# Visualisierung (Wahl-/Strukturdaten)
+
+![](https://raw.githubusercontent.com/TheFakeStefan/DataSciencewithR/master/images/presentation/Bruttohisto.PNG)
+
+---
+
+&lt;div class="hdm"&gt;&lt;/div&gt;
+
+# Visualisierung (Wahl-/Strukturdaten)
+
+**Bruttoeinkommen 1995-2017 - - - München vs. Sachsen-Anhalt** 
+
+--
+
+
+```r
+# Datenselektion und -aufbereitung für Sachsen-Anhalt.
+bruttoeinkomm_ST &lt;- bruttoeinkomm%&gt;%
+  filter(LAND_ABK=="ST")%&gt;%
+  rename("Bruttoentgelte"="Bruttoentgelte.je.Beschäftigten.in.Tsd..EUR")%&gt;%
+  filter(Bruttoentgelte != "NA")%&gt;%
+  select(-Column1)
+bruttoeinkomm_ST &lt;- within(bruttoeinkomm_ST, {
+        Bruttoentgelte &lt;- as.numeric(as.character(Bruttoentgelte))
+})
+bruttoeinkomm_ST &lt;- bruttoeinkomm_ST%&gt;%
+  group_by(Year)%&gt;%
+  summarize(median(Bruttoentgelte, Year))%&gt;%
+  mutate(Standort = "Sachsen-Anhalt")%&gt;%
+  rename("Bruttoentgelte"="median(Bruttoentgelte, Year)")
+# Visualisierung mit Hilfe eines Liniendiagramms
+ggplot(bruttoeinkommen_M_ST, aes(x=Year, y=Bruttoentgelte, color=Standort)) +
+  geom_line() +
+  theme_classic() +
+  expand_limits(y=0) +
+  labs(title="Bruttoeinkommen 1995 - 2017", x="Jahr", y="Bruttoentgelte")
+```
+
+---
+
+&lt;div class="hdm"&gt;&lt;/div&gt;
+
+# Visualisierung (Wahl-/Strukturdaten)
+
+![](https://raw.githubusercontent.com/TheFakeStefan/DataSciencewithR/master/images/presentation/Muenchen_SachsenAnhalt.PNG)
+
+---
+
+&lt;div class="hdm"&gt;&lt;/div&gt;
+
+# Visualisierung (Wahl-/Strukturdaten)
+
+**Verfügbare Einkommen - - - Verteilung im Zeitverlauf** 
+
+--
+
+
+```r
+# Daten für 2002 aufbereiten
+verfeinkomm2002 &lt;- verfeinkomm%&gt;%
+  filter(Year=="2002")%&gt;%
+  rename("Verf_Einkommen"="Verfügbares.Einkommen.je.Einwohner.in.EUR")%&gt;%
+  filter(Verf_Einkommen != "NA")%&gt;%
+  select(-Column1)%&gt;%
+  mutate(OstWest = ifelse(LAND_ABK %in% c("MV","BB","SN","TH","ST"),"Ost","West"))
+verfeinkomm2002 &lt;- within(verfeinkomm2002, {
+        Verf_Einkommen &lt;- as.numeric(as.character(Verf_Einkommen))
+})
+
+# Boxplot für 2016
+plot2016 &lt;- ggplot(verfeinkomm2016, aes(x=OstWest, y=Verf_Einkommen, fill=OstWest)) +
+  geom_boxplot(outlier.size=2) +
+  theme_light() +
+  scale_y_log10() +
+  labs(title="Verf. Einkommen (Ost/West) - 2016", x="", y="")
+
+# Anordnen der Boxplots in Tabellenform
+require(gridExtra)
+grid.arrange(plot2002, plot2009, plot2013, plot2016, ncol=2)
+```
+
+---
+
+&lt;div class="hdm"&gt;&lt;/div&gt;
+
+# Visualisierung (Wahl-/Strukturdaten)
+
+![](https://raw.githubusercontent.com/TheFakeStefan/DataSciencewithR/master/images/presentation/VerfuegbaresEinkBox.PNG)
+
+---
+
+&lt;div class="hdm"&gt;&lt;/div&gt;
+
+# Visualisierung (Wahl-/Strukturdaten)
+
+
+
+**Analysen**
+- Verteilung 'Bruttoeinkommen' &amp; 'Verfügbares Einkommen'
+- Vergleich Ost-West
+- Trends im Zeitverlauf
+- Hypothesentest
+
+**Visualisierung mit ggplot und beeswarm**
+
+
+---
+
+&lt;div class="hdm"&gt;&lt;/div&gt;
+
+# Visualisierung (Wahl-/Strukturdaten)
+
+**Verfügbares Einkommen in Ost und West - - - 2002 - 2016** 
+
+--
+
+
+```r
+# Verbindung aller Daten in einem Datensatz 
+verfeinkommen_allbee &lt;- rbind(verfeinkomm2002, verfeinkomm2005, 
+                              verfeinkomm2009, verfeinkomm2013, verfeinkomm2016)
+
+head(verfeinkommen_allbee, 5)
+
+# Visualisierung mit Hilfe eines 'Beeswarm-Charts'
+library(ggbeeswarm)
+ggplot(verfeinkommen_allbee, aes(x=Year, y=Verf_Einkommen, color=OstWest)) +
+  geom_beeswarm(dodge.width=0.1) +
+  labs(title="Verfügbare Einkommen (Ost/West)", 
+       subtitle="Zeitraum 2002 - 2016", 
+       x="Jahr", 
+       y="Verfügbares Einkommen in EUR")
+```
+
+---
+
+&lt;div class="hdm"&gt;&lt;/div&gt;
+
+# Visualisierung (Wahl-/Strukturdaten)
+
+![](https://raw.githubusercontent.com/TheFakeStefan/DataSciencewithR/master/images/presentation/VerfuegbarBeeswarm.PNG)
+
+---
+
+&lt;div class="hdm"&gt;&lt;/div&gt;
+
+# Visualisierung (Wahl-/Strukturdaten)
+
+**Bruttoeinkommen in Deutschland - - - 1995 - 2017** 
+
+--
+
+
+```r
+# Vorbereitung der Daten
+bruttoeinkommen &lt;- bruttoeinkomm%&gt;%
+  rename("Bruttoentgelte"="Bruttoentgelte.je.Beschäftigten.in.Tsd..EUR")%&gt;%
+  filter(Bruttoentgelte != "NA")%&gt;%
+  select(-Column1)%&gt;%
+  mutate(OstWest = ifelse(LAND_ABK %in% c("MV","BB","SN","TH","ST"),"Ost","West"))
+bruttoeinkommen &lt;- within(bruttoeinkommen, {
+        Bruttoentgelte &lt;- as.numeric(as.character(Bruttoentgelte))
+})
+
+head(bruttoeinkommen, 5)
+
+# Visualisierung mit Hilfe eines 'Beeswarm-Charts'
+ggplot(bruttoeinkommen, aes(x=Year, y=Bruttoentgelte, color=OstWest)) +
+  geom_beeswarm(dodge.width=0.1) +
+  labs(title="Bruttoeinkommen (Ost/West)", 
+       subtitle="Zeitraum 1995 - 2017", 
+       x="Jahr",
+       y="Bruttoeinkommen in EUR")
+```
+
+---
+
+&lt;div class="hdm"&gt;&lt;/div&gt;
+
+# Visualisierung (Wahl-/Strukturdaten)
+
+![](https://raw.githubusercontent.com/TheFakeStefan/DataSciencewithR/master/images/presentation/BruttoBeeswarm.PNG)
+
+---
+
+
+&lt;div class="hdm"&gt;&lt;/div&gt;
+
+# Hypothesentest
+
+
+Die **Hypothese ist, dass sowohl im Jahr 1995 als auch im Jahr 2017 die statistischen Unterschiede bei den Bruttoeinkommen in Ost und West nach wie vor statistisch signifikant sind**. Mathematisch kann man das wie folgt ausdrücken:
+
+*H1a: mean_bruttoeinkommen(West-1995) - mean_bruttoeinkommen(Ost-1995) &gt; 0*
+&lt;br/&gt; *H1b: mean_bruttoeinkommen(West-2017) - mean_bruttoeinkommen(Ost-2017) &gt; 0*
+
+Die **Null-Hypothese** ist folglich die Aussage, dass es weder 1995 noch 2017 statistisch signifikante Unterschiede bei den Bruttoeinkommen in Ost und West gab. Mathematisch gesprochen:
+
+*H1a: mean_bruttoeinkommen(West-1995) - mean_bruttoeinkommen(Ost-1995) &lt;= 0* 
+&lt;br/&gt;*H1b: mean_bruttoeinkommen(West-2017) - mean_bruttoeinkommen(Ost-2017) &lt;= 0*
+
+Angelegt werden soll bei unserem Test ein **Signifikanzniveau von 0.01**, um die Nullhypothesen zu verwerfen. Werden **beide Varianten der Nullhypothese verworfen, wird die Gesamthypothese als bestätigt gewertet**.
+
+---
+
+&lt;div class="hdm"&gt;&lt;/div&gt;
+
+# Hypothesentest
+
+
+```r
+# t-Test für Daten des Jahres 1995
+X1 &lt;- as.vector(bruttoeinkommen1995west$Bruttoentgelte)
+Y1 &lt;- as.vector(bruttoeinkommen1995ost$Bruttoentgelte)
+
+t.test(x=X1, y=Y1, alternative = c("two.sided","less",
+ "greater"), mu=0, var.equal=F, paired=F, conf.level=0.99)
+
+# t-Test für Daten des Jahres 2017
+X1 &lt;- as.vector(bruttoeinkommen2017west$Bruttoentgelte)
+Y1 &lt;- as.vector(bruttoeinkommen2017ost$Bruttoentgelte)
+
+t.test(x=X1, y=Y1, alternative = c("two.sided","less",
+ "greater"), mu=0, var.equal=F, paired=F, conf.level=0.99)
+```
+
+---
+
+&lt;div class="hdm"&gt;&lt;/div&gt;
+
+# Hypothesentest
+
+**Interpretation**
+
+Zunächst werden die **Daten des Jahres 1995** betrachtet. Die Ergebnisse des t-Tests zeigen, dass die Nullhypothese H1a verworfen werden kann. Der **t-Wert ist mit 21,3 deutlich über dem Signifikanzniveau von 10,4**, welches bei einem Konfidenzniveau von 99% bei einem zweiseitigen t-Test angelegt wird. Der **p-Wert von annähernd null** zeigt, dass der Unterschied zwischen den ost- und westdeutschen Landkreisen auch statistisch signifikant ist.
+
+Im zweiten Schritt betrachten wir uns die **Daten des Jahres 2017**. Die Ergebnisse des t-Tests weisen hier einen **t-Wert von 15,5 auf, was ebenfalls oberhalb des Signifikanzniveaus von 14,0** liegt. Der **p-Wert ist auch hier annähernd null**, so dass auch in diesem Fall der Unterschied zwischen den ost- und westdeutschen Landkreisen statistisch signifikant ist. Wir können also auch die Nullhypothese H1b verwerfen.
+
+Abschließend können wir zusammenfassen, dass die **Gesamthypothese als bestätigt betrachtet werden kann**. Grund: **Sowohl die Nullhypothese H1a für das Jahr 1995 als auch die Nullhypothese H1b für das Jahr 2017 konnten verworfen werden**. Die Unterschiede zwischen beiden Gruppen waren in der Vergangenheit und sind auch heute (i.e. 2017) noch statistisch signifikant.
+
+---
+
+&lt;div class="hdm"&gt;&lt;/div&gt;
+
+# Visualisierungen auf Karten
+
+- Strukturdaten auf **Landkreis-Ebene**
+- Kartenmaterial und Wahlergebnisse auf **Wahlkreis-Ebene**
+- Manuelle Verknüpfung der Land- und Wahlkreise
+
+--
+
+
+```r
+# Einlesen der Karte
+shapefile &lt;- readOGR("deutschland.shp")
+germany &lt;- germany %&gt;% 
+  mutate(LAND_NR = as.numeric(LAND_NR))
+# Einlesen der Strukturdaten
+beschaeftigung &lt;- ReadData("beschaeftigung.csv")
+beschaeftigung_2017 &lt;- beschaeftigung %&gt;% 
+  filter(jahr == 2017) % &gt;%rename(LKR_NR = X) %&gt;% 
+  mutate(LKR_NR = as.numeric(LKR_NR))
+# Zusammenführen der Strukturdaten mit dem Mapping
+beschaeftigung_2017 &lt;- merge(x=beschaeftigung_2017, y=mapping_df, 
+                             by.x="LKR_NR", by.y="LKR_NR") %&gt;% 
+  subset("LKR_NR", "WKR_NR", "beschaftigungsquote")
+# Zusammenführen der Karte und Daten
+map &lt;- merge(x=germany, y = beschaeftigung_2017, by.x="WKR_NR", by.y="WKR_NR" )
+# Ausgabe
+plot(map['beschaftigungsquote'], main = "Beschäftigungsquote von 2017")
+```
+
+---
+&lt;div class="hdm"&gt;&lt;/div&gt;
+
+# Visualisierungen auf Karten
+
+![](https://raw.githubusercontent.com/TheFakeStefan/DataSciencewithR/master/images/presentation/Maps.png)
+
+---
+
+&lt;div class="hdm"&gt;&lt;/div&gt;
+
+# Text Mining
+
+- Extraktion der Informationen aus HTML-Datei
+- Zerlegen der Artikeltexte und -überschriften
+- Vereinheitlichung der Umlaute
+- Stopword-Filtering und Stemming
+
+--
+
+
+```r
+# Liste mit deutschen Stoppwörtern
+stopword &lt;- as_tibble(stopwords::stopwords("de")) 
+
+# Erweiterte Liste mit deutschen Stoppwörtern
+stopword_extented &lt;- read_tsv("https://raw.githubusercontent.com/
+solariz/german_stopwords/master/german_stopwords_full.txt", comment = ";")
+
+# Liste der eigenen Stoppwörtern
+stopword_own &lt;- tibble(word = c("bz", "mz", "rp", "sz", "tz", "ta", "taz"))
+
+# Zusammenfügen und entfernen von Duplikaten
+all_stopword &lt;- bind_rows(stopword,stopword_extented, stopword_own) %&gt;% distinct()
+
+
+tb_header &lt;- anti_join(token_header, all_stopword, by = 'word')
+tb_text &lt;- anti_join(token_text, all_stopword, by = 'word')
+```
+---
+&lt;div class="hdm"&gt;&lt;/div&gt;
+
+# Explorative Datenanalyse
+
+- Worthäufigkeiten nach:
+  - Artikeltexten
+  - Publikation
+  - Parteien
+
+
+```r
+# Durchsuchen der Artikel nach jeder Partei
+article_patei_linke_count &lt;- tb_text %&gt;% 
+  filter(word == "linken" | word == "pds") %&gt;% 
+  group_by(year) %&gt;% 
+  count(year, sort = TRUE) %&gt;% ungroup()
+article_patei_linke_count$word &lt;- "linke"
+
+# Zusammenführen der Daten
+article_patei_total &lt;- rbind(article_patei_cdu_count, article_patei_spd_count,
+                             article_patei_fdp_count, article_patei_gruene_count,
+                             article_patei_linke_count, article_patei_afd_count)
+
+# Kalkulation der prozentualen Anteile
+article_patei_percent &lt;- group_by(article_patei_total, year) %&gt;% 
+                         mutate(percent = n/sum(n) * 100) %&gt;%
+                         ungroup()
+```
+
+---
+&lt;div class="hdm"&gt;&lt;/div&gt;
+
+# Explorative Datenanalyse
+
+- Worthäufigkeiten nach:
+  - Artikeltexten
+  - Publikation
+  - Parteien
+
+
+```r
+# Zuweisen der Farben
+pateifarben &lt;- c("blue", "black", "yellow", "green", "purple", "red")
+
+# Ausgeben des Balkendiagramms
+ggplot(data=article_patei_percent, aes(x=year, y=percent, fill=word )) +
+  geom_bar(stat="identity",
+           position='stack')+
+  scale_fill_manual(values=pateifarben) +
+  xlab("Nennungen in der Presse") +
+  ylab("Prozent") +
+  theme_minimal() +
+  theme(legend.title = element_blank()) +
+  ggtitle("Relevanz der Partei in der Presse")
+```
+
+---
+&lt;div class="hdm"&gt;&lt;/div&gt;
+
+# Explorative Datenanalyse
+
+![](https://raw.githubusercontent.com/TheFakeStefan/DataSciencewithR/master/images/presentation/Worthaeufigkeiten_nach_Parteien.png)
+
+---
+&lt;div class="hdm"&gt;&lt;/div&gt;
+
+# Explorative Datenanalyse
+
+**Vergleich von Pressepräsenz und realen Wahlergebnissen**
+
+
+```r
+# Funktion um die Wahlergebnisse der jeweiligen Partei einzulesen
+read_wahlergebnis &lt;- function(partei) {
+  z &lt;- read_csv2("bundestagswahlergebnisse_1990_2017.csv", 
+                 col_type = cols()) %&gt;% 
+  select(Wahljahr,toupper(partei)) %&gt;% 
+  as.data.frame() %&gt;%
+  rename("year" = Wahljahr, "percent" = toupper(partei))
+  z$type &lt;- "r" # Reales Ergebnis
+  z$word &lt;- tolower(partei)
+  z$n &lt;- 0
+  return(z)
+}
+
+# Anwenden der Funktion
+wahlergbnis_cdu &lt;- read_wahlergebnis("CDU")
+
+# Zusammenführen mit den Pressedaten
+article_patei_percent$type &lt;- "p" # Presse Ergebnis
+graphdata &lt;- rbind(article_patei_percent,wahlergbnis_patei_percent)
+```
+
+---
+&lt;div class="hdm"&gt;&lt;/div&gt;
+
+# Explorative Datenanalyse
+
+**Vergleich von Pressepräsenz und realen Wahlergebnissen**
+
+
+```r
+# Für die Formatierung
+graphdata$word &lt;- toupper(graphdata$word)
+
+# Richtige Farbkennung der Parteien
+pateifarben &lt;- c("blue", "black", "yellow", "green", "purple", "grey", "red")
+
+# Plotten der Grafik
+ggplot(data=graphdata, aes(x=type, y=percent, fill=word )) +
+  geom_bar(stat="identity",
+           position='stack')+
+  facet_grid( ~ year) +
+  scale_fill_manual(values=pateifarben) +
+  xlab("(P)resse VS (R)ealität") +
+  ylab("Prozent") +
+  labs(caption = "... auf Basis der Nennungen in den Artikeltexten.") +
+  theme_minimal() +
+  theme(legend.title = element_blank()) +
+  ggtitle("Vergleich der Wahlergebnisse mit der Relevanz in der Presse")
+```
+
+---
+&lt;div class="hdm"&gt;&lt;/div&gt;
+
+# Explorative Datenanalyse
+
+![](https://raw.githubusercontent.com/TheFakeStefan/DataSciencewithR/master/images/presentation/Vergleich_Wahlergbnis_Presse.png)
+&lt;div class="hdm"&gt;&lt;/div&gt;
+
+---
+&lt;div class="hdm"&gt;&lt;/div&gt;
+
+# Sentimentanalyse
+
+- **Analyse und Vergleich des Sentiments**
+- **Lexikon der Universität Leipzig** als Grundlage
+
+
+```r
+# Einlesen des Lexikons
+negative_worte &lt;- read_tsv("sentiment_lexikon.txt", col_names = FALSE)
+
+# Umbenennen der Spalten
+names(negative_worte) &lt;- c("Wort_POS", "Wert", "Inflektionen")
+
+# Negative Wörter und Beugungen dieser Extrahieren
+negative_worte &lt;- negative_worte %&gt;% 
+  mutate(Wort = str_sub(Wort_POS, 1, regexpr("\\|", .$Wort_POS)-1),
+         POS = str_sub(Wort_POS, start = regexpr("\\|", .$Wort_POS)+1))
+
+# Zusammenführen der postitiven und negativen Wörter
+sentiment_df &lt;- bind_rows("neg" = negative_worte,
+                          "pos" = positive_worte, .id = "neg_pos")
+
+# Selektieren der relevanten Spalten
+sentiment_df &lt;- select(sentiment_df, neg_pos, Wort, Wert, Inflektionen, -Wort_POS)
+```
+
+---
+&lt;div class="hdm"&gt;&lt;/div&gt;
+
+# Sentimentanalyse
+
+Vergleich einer Ost- und Westpublikation (**Sächsische Zeitung** vs. **Badische Zeitung**)
+
+
+```r
+# Selektion der Badischen Zeitung 
+tb_text_basische_zeitung &lt;- filter(tb_text,publisher == "badische zeitung") 
+
+# Berechnung des Scores für die negativen Wörter 
+tb_text_basische_zeitung_sentiment_neg &lt;- 
+  match(tb_text_basische_zeitung$word, filter(sentiment_df, neg_pos == "neg")$word)
+tb_text_basische_zeitung_neg_score &lt;- 
+  sum(!is.na(tb_text_basische_zeitung_sentiment_neg))
+
+# Berechnung des Scores für die negativen Wörter 
+tb_text_basische_zeitung_sentiment_pos &lt;- 
+  match(tb_text_basische_zeitung$word, filter(sentiment_df, neg_pos == "pos")$word)
+tb_text_basische_zeitung_pos_score &lt;- 
+  sum(!is.na(tb_text_basische_zeitung_sentiment_pos))
+
+# Berechnung des Ergebnisses
+round(tb_text_basische_zeitung_pos_score/tb_text_basische_zeitung_neg_score, 1)
+```
+
+--
+
+.center[
+    Badische Zeitung    |    Sächsische Zeitung  
+----------------------- | -----------------------
+          2.0           |           2.5  
+]
+
+---
+&lt;div class="hdm"&gt;&lt;/div&gt;
+
+# Sentimentanalyse
+
+**Vergleich des Sentiments über die vergangenen Wahljahre**
+
+
+```r
+# Funktion zur Berechnug des Sentiments pro Wahljahr 
+getSentiment &lt;- function(text,jahr) {
+  x &lt;- text %&gt;% filter(year == jahr) 
+  
+  x_senti_neg &lt;- match(x$word, filter(sentiment_df, neg_pos == "neg")$word)
+  x_neg_score &lt;- sum(!is.na(x_senti_neg))
+  
+  x_senti_pos &lt;- match(x$word, filter(sentiment_df, neg_pos == "pos")$word)
+  x_pos_score &lt;- sum(!is.na(x_senti_pos))
+  # wir fangen hier mögliche nullwerte von x_neg_score ab
+  y &lt;- ifelse(is.infinite(x_pos_score/x_neg_score),
+              x_pos_score,x_pos_score/x_neg_score) %&gt;% as.numeric()
+  print(paste("Der Sentiment für das Jahr", jahr, "beträgt", y))
+  return(tibble(y,jahr))
+}
+
+senti_header_1990 &lt;- getSentiment(tb_header, "1990")
+## [1] "Der Sentiment für das Jahr 1990 beträgt 5"
+senti_header_1990 &lt;- getSentiment(tb_text, "1990")
+## [1] "Der Sentiment für das Jahr 1990 beträgt 1.38461538461538"
+```
+
+---
+&lt;div class="hdm"&gt;&lt;/div&gt;
+
+# Sentimentanalyse
+
+**Vergleich des Sentiments über die vergangenen Wahljahre**
+
+
+```r
+# Zusammenführen der Dataframes
+senti_header_all$source &lt;- "Titel"
+senti_text_all$source &lt;- "Text"
+senti_all &lt;- rbind(senti_header_all,senti_text_all) 
+
+# Plotten der Grafik
+ggplot(data=senti_all, aes(x=jahr, y=y, fill=source )) +
+  geom_bar(stat="identity",
+          position=position_dodge())+
+  xlab("Jahr") +
+  ylab("Sentiment") +
+  theme_minimal() +
+  theme(legend.title = element_blank()) +
+  ggtitle("Vergleich der Sentimente über die vergangenen Wahljahre")
+```
+
+---
+&lt;div class="hdm"&gt;&lt;/div&gt;
+
+# Sentimentanalyse
+
+![](https://raw.githubusercontent.com/TheFakeStefan/DataSciencewithR/master/images/presentation/Sentimente_ueber_Wahljahre.png)
+
+---
+
+&lt;div class="hdm"&gt;&lt;/div&gt;
+
+# Shiny
+
+**Features der Applikation**
+- 2 Datenquellen (Artikelüberschrift und -text)
+- Dynamisches Minimum und Maximum der Token
+- Deployment über ShinyApps - [http://hdm-shiny.think-data.de/](http://hdm-shiny.think-data.de/)
+  
+**Unzureichende Performance**
+- Reduzierung der Tokenlisten
+- Caching der Token
+
+--
+
+
+```r
+top_ueberschrift_liste &lt;- artikel_df %&gt;% count(word) %&gt;% top_n(500)
+top_text_liste &lt;- artikel_df %&gt;% count(word) %&gt;% top_n(500)
+
+build_wordcloud &lt;- memoise(function(quelle) {
+  if (quelle == "Artikeltext")
+  { text &lt;- top_text_liste }
+  if (quelle == "Artikelüberschrift") 
+  { text &lt;- top_ueberschrift_liste }
+  # Erstellen des Objektes für die Wordcloud
+  [...] })
+```
+
+---
+
+&lt;div class="hdm"&gt;&lt;/div&gt;
+
+# Elasticsearch und Kibana
+
+Importieren der Textdaten in Elasticsearch
+
+Aufzeigen von Zusammenhängen zwischen:
+- Wörtern in Artikeln
+- Wörtern und Publikationen
+- Wahlkampfthemen der vergangenen Jahre
+
+Explorative Analyse
+
+
+```r
+klima_suche &lt;- query('{
+    "multi_match": {
+      "query": "(klima) OR (klimakrise) OR (umwelt)",
+      "fields": [ "header", "text" ]
+    }}')
+
+klima &lt;- elastic("https://user:password@elasticsearch:9200", 
+                 "presse*") %search% (klima_suche)
+```
+
+Live Demonstration unter [http://hdm-kibana.think-data.de/](http://hdm-kibana.think-data.de/) 
+
+---
+
+&lt;div class="hdm"&gt;&lt;/div&gt;
+
+# Resümee und Ausblick
+
+**Resümee** - Sowohl Python als auch R für Aufgabenstellung geeignet
+
+.pull-left[
+Vorteile von R
+- Datenaufbereitung einfacher, da R bspw. für Dataframes optimiert
+- Höherer Reifegrad - reichhaltiges Angebot an Paketen
+]
+
+.pull-right[
+Nachteile von R
+- Vielzahl von Paketen führt zu Verwirrung
+- Schlechte Dokumentation
+]
+
+--
+
+**Ausblick - "Wenn mehr Zeit gewesen wäre..."**
+- Weitere *statistische Auswertungen*
+- Datenbestand bietet vielfältige Möglichkeiten für *Korrelationsanalysen*
+- Einsatz von *Machine Learning Algorithmen*, z.B. für Klassifizierung, Clustering
+- Weiterführung der *Textanalyse*
+- Austesten weiterer *interaktiver Visualisierungen*
+- **Code-Reduktion durch Einsatz von Iterationen, kürzeren Befehlen, etc.**
+
+---
+
+&lt;div class="hdm"&gt;&lt;/div&gt;
+
+# Manöverkritik
+
+.pull-left[
+**Highlights**
+- Interessante Datenquellen und Fragestellungen
+- Datenaufbereitung in R sehr komfortabel
+- Vielfalt an Visualisierungstool
+- Großes Experimentierfeld
+]
+
+.pull-right[
+**Lowlights**
+- Zeit für Projektarbeit im Grunde genommen zu kurz
+- Vor allem Umfang und Eleganz des Codes haben dadurch gelitten
+- 'Unübersichtlichkeit' von R im Vergleich zu Python
+- Überblick bekommen und Struktur verstehen für Anfänger schwierig
+- R hinterlässt 'fragmentarischen' Eindruck
+- Erfolgreiches 'Run All' != erfolgreiches Knitting
+- Nicht alles, was auf MacOS funktioniert, klappt auch in Windows
+- Umgang mit deutschen Umlauten und Sonderzeichen sehr knifflig
+]
+
+---
+
+&lt;div class="hdm"&gt;&lt;/div&gt;
+
+# GitHub - Repository
+
+- **Datenquellen**
+  - Wahldaten: [Bundeswahlleiter](https://www.bundeswahlleiter.de/bundestagswahlen/2017/ergebnisse.html) 
+  - Strukturdaten: [Statistisches Bundesamt](https://www-genesis.destatis.de/gis/genView?GenMLURL=https://www-genesis.destatis.de/regatlas/AI-Z4-2011.xml&amp;CONTEXT=REGATLAS01)
+  - Presseberichte: [WISO-Datenbank](https://www.wiso-net.de/dosearch/:3:ALLEQUELLEN-106_:3:PRESSE)
+
+- **Präsentation**
+  - Xaringan-Code
+  - Bilder: [Deutscher Bundestag](http://bilderdienst.bundestag.de/journals/public_collections.php), [shiny](https://shiny.rstudio.com/)
+  - Daten
+
+- **Anregungen zum Code**
+  - Recherche zu **aktuellen** Paketen und Funktionen
+  - Verwendung eines gemeinsamer Codebasis
+
+- **Github-Repository**
+  - Zugang: [http://hdm-git.think-data.de/](https://github.com/TheFakeStefan/DataSciencewithR)
+
+---
+class: inverse, middle, center
+
+&lt;div class="hdm"&gt;&lt;/div&gt;
+
+# Danke für Eure Aufmerksamkeit.
+
+&lt;style&gt;
+div.hdm {
+  background-image: url(https://raw.githubusercontent.com/TheFakeStefan/DataSciencewithR/master/images/presentation/hdm.png);
+  background-position: 90% 1.3%;
+  background-size: 70px;
+  position: fixed;
+  top: 1.3%;
+  left: 90%;
+  height: 62.5px;
+  width: 70px;
+}
+
+.remark-slide-number {
+  position: inherit;
+}
+
+.remark-slide-number .progress-bar-container {
+  position: absolute;
+  bottom: 0;
+  height: 5px;
+  display: block;
+  left: 0;
+  right: 0;
+}
+
+.remark-slide-number .progress-bar {
+  height: 100%;
+  background-color: #23373B;
+}
+
+&lt;/style&gt;
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false,
+"slideNumberFormat": "<div class=\"progress-bar-container\">   <div class=\"progress-bar\" style=\"width: calc(%current% / %total% * 100%);\">   </div> </div> "
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
