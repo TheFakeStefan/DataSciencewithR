@@ -759,7 +759,7 @@ ggplot(data=article_patei_percent,
 **Vergleich von Pressepräsenz und realen Wahlergebnissen**
 
 ```{r, eval=FALSE}
-# Funktion um die Wahlergebnisse der jeweiligen Partei einzulesen
+# Funktion, um die Wahlergebnisse der jeweiligen Partei einzulesen
 read_wahlergebnis <- function(partei) {
   z <- read_csv2("bundestagswahlergebnisse_1990_2017.csv", 
                  col_type = cols()) %>% 
@@ -771,11 +771,13 @@ read_wahlergebnis <- function(partei) {
   return(z)
 }
 
-# Anwenden der Funktion
-wahlergbnis_cdu <- read_wahlergebnis("CDU")
+# Anwenden der Funktion auf die Partei CDU
+wahlergbnis_cdu <- read_wahlergebnis("cdu")
+
+# Markieren der Gruppe der Daten
+article_patei_percent$type <- "p" # Presse Ergebnis
 
 # Zusammenführen mit den Pressedaten
-article_patei_percent$type <- "p" # Presse Ergebnis
 graphdata <- rbind(article_patei_percent, wahlergbnis_patei_percent)
 ```
 
@@ -859,7 +861,7 @@ tb_text_basische_zeitung_sentiment_neg <-
 tb_text_basische_zeitung_neg_score <- 
   sum(!is.na(tb_text_basische_zeitung_sentiment_neg))
 
-# Berechnung des Scores für die negativen Wörter 
+# Berechnung des Scores für die positiven Wörter 
 tb_text_basische_zeitung_sentiment_pos <- 
   match(tb_text_basische_zeitung$word, filter(sentiment_df, neg_pos == "pos")$word)
 tb_text_basische_zeitung_pos_score <- 
@@ -894,8 +896,8 @@ getSentiment <- function(text,jahr) {
   
   x_senti_pos <- match(x$word, filter(sentiment_df, neg_pos == "pos")$word)
   x_pos_score <- sum(!is.na(x_senti_pos))
-  # wir fangen hier mögliche nullwerte von x_neg_score ab
-  y <- ifelse(is.infinite(x_pos_score / x_neg_score),
+  # Abfangen möglicher Nullwerte von x_neg_score
+  senti_sum <- ifelse(is.infinite(x_pos_score / x_neg_score),
               x_pos_score,x_pos_score / x_neg_score) %>% as.numeric()
   print(paste("Der Sentiment für das Jahr", jahr, "beträgt", y))
   return(tibble(y,jahr))
@@ -916,12 +918,12 @@ senti_header_1990 <- getSentiment(tb_text, "1990")
 
 ```{r, eval=FALSE}
 # Zusammenführen der Dataframes
-senti_header_all$source <- "Titel"
-senti_text_all$source <- "Text"
+senti_header_all$src <- "Titel"
+senti_text_all$src <- "Text"
 senti_all <- rbind(senti_header_all, senti_text_all) 
 
 # Plotten der Grafik
-ggplot(data=senti_all, aes(x = jahr, y = y, fill = source )) +
+ggplot(data=senti_all, aes(x = jahr, y = senti_sum, fill = src )) +
   geom_bar(stat="identity",
           position=position_dodge())+
   xlab("Jahr") +

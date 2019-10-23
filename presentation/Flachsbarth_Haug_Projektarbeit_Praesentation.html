@@ -4,7 +4,7 @@
     <title>Analyse der Bundestagswahlen 1990 - 2017</title>
     <meta charset="utf-8" />
     <meta name="author" content="  Stefan Flachsbarth, Martin Haug" />
-    <meta name="date" content="2019-10-22" />
+    <meta name="date" content="2019-10-23" />
     <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
     <link href="libs/remark-css-0.0.1/metropolis.css" rel="stylesheet" />
     <link href="libs/remark-css-0.0.1/metropolis-fonts.css" rel="stylesheet" />
@@ -16,7 +16,7 @@ class: center, middle, inverse, title-slide
 # Analyse der Bundestagswahlen 1990 - 2017
 ## inkl. Strukturdaten und Presseberichterstattung
 ### <br/><br/>Stefan Flachsbarth, Martin Haug
-### 2019-10-22
+### 2019-10-23
 
 ---
 
@@ -776,7 +776,7 @@ ggplot(data=article_patei_percent,
 
 
 ```r
-# Funktion um die Wahlergebnisse der jeweiligen Partei einzulesen
+# Funktion, um die Wahlergebnisse der jeweiligen Partei einzulesen
 read_wahlergebnis &lt;- function(partei) {
   z &lt;- read_csv2("bundestagswahlergebnisse_1990_2017.csv", 
                  col_type = cols()) %&gt;% 
@@ -788,11 +788,13 @@ read_wahlergebnis &lt;- function(partei) {
   return(z)
 }
 
-# Anwenden der Funktion
-wahlergbnis_cdu &lt;- read_wahlergebnis("CDU")
+# Anwenden der Funktion auf die Partei CDU
+wahlergbnis_cdu &lt;- read_wahlergebnis("cdu")
+
+# Markieren der Gruppe der Daten
+article_patei_percent$type &lt;- "p" # Presse Ergebnis
 
 # Zusammenführen mit den Pressedaten
-article_patei_percent$type &lt;- "p" # Presse Ergebnis
 graphdata &lt;- rbind(article_patei_percent, wahlergbnis_patei_percent)
 ```
 
@@ -879,7 +881,7 @@ tb_text_basische_zeitung_sentiment_neg &lt;-
 tb_text_basische_zeitung_neg_score &lt;- 
   sum(!is.na(tb_text_basische_zeitung_sentiment_neg))
 
-# Berechnung des Scores für die negativen Wörter 
+# Berechnung des Scores für die positiven Wörter 
 tb_text_basische_zeitung_sentiment_pos &lt;- 
   match(tb_text_basische_zeitung$word, filter(sentiment_df, neg_pos == "pos")$word)
 tb_text_basische_zeitung_pos_score &lt;- 
@@ -915,8 +917,8 @@ getSentiment &lt;- function(text,jahr) {
   
   x_senti_pos &lt;- match(x$word, filter(sentiment_df, neg_pos == "pos")$word)
   x_pos_score &lt;- sum(!is.na(x_senti_pos))
-  # wir fangen hier mögliche nullwerte von x_neg_score ab
-  y &lt;- ifelse(is.infinite(x_pos_score / x_neg_score),
+  # Abfangen möglicher Nullwerte von x_neg_score
+  senti_sum &lt;- ifelse(is.infinite(x_pos_score / x_neg_score),
               x_pos_score,x_pos_score / x_neg_score) %&gt;% as.numeric()
   print(paste("Der Sentiment für das Jahr", jahr, "beträgt", y))
   return(tibble(y,jahr))
@@ -938,12 +940,12 @@ senti_header_1990 &lt;- getSentiment(tb_text, "1990")
 
 ```r
 # Zusammenführen der Dataframes
-senti_header_all$source &lt;- "Titel"
-senti_text_all$source &lt;- "Text"
+senti_header_all$src &lt;- "Titel"
+senti_text_all$src &lt;- "Text"
 senti_all &lt;- rbind(senti_header_all, senti_text_all) 
 
 # Plotten der Grafik
-ggplot(data=senti_all, aes(x = jahr, y = y, fill = source )) +
+ggplot(data=senti_all, aes(x = jahr, y = senti_sum, fill = src )) +
   geom_bar(stat="identity",
           position=position_dodge())+
   xlab("Jahr") +
