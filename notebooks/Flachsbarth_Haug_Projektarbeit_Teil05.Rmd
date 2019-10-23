@@ -71,7 +71,7 @@ ReadData <- function(table_name) {
     host = 'hdm-sql.think-data.de', 
     dbname = 'postgres',
     user = 'postgres',
-    password = '%%CENSORED%%'
+    password = 'Le9zGIn66GTJKGUc4Psv'
     # Der richtige Weg, um auf sichere Weise das Passwort abzufragen
     #password = rstudioapi::askForPassword("Database password")
     )
@@ -191,8 +191,14 @@ In dieser Darstellung ist nun deutlich die **dominante Position der CDU/CSU bei 
 
 dataset2017_map <- merge(x=germany_map, y = dataset2017, by.x="WKR_NR", by.y="WKR_NR" )
 
+# Abrufen der Top10-Werte der Beschäftigungsquote
+arrange(dataset2017_map, desc(Index.Beschäftigtenquote)) %>% select(Index.Beschäftigtenquote,Beschäftigtenquote.Männer.in..,Beschäftigtenquote.Frauen.in..)
+
+# Abrufen der schlechtesten 10 Werte der Beschäftigungsquote
+arrange(dataset2017_map, Index.Beschäftigtenquote) %>% select(Index.Beschäftigtenquote,Beschäftigtenquote.Männer.in..,Beschäftigtenquote.Frauen.in..)
+
 # Ausgeben des Plots mit dem Inhalt der Spalte "Index.Beschäftigtenquote"
-plot(dataset2017_map['Index.Beschäftigtenquote'], main = "Beschäftigungsquote von 2017")
+plot(dataset2017_map['Index.Beschäftigtenquote'], main = "Beschäftigungsquote von 2017", nbreaks = 8)
 
 ```
 
