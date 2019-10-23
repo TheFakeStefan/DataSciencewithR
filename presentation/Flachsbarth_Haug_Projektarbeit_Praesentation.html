@@ -8,6 +8,7 @@
     <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
     <link href="libs/remark-css-0.0.1/metropolis.css" rel="stylesheet" />
     <link href="libs/remark-css-0.0.1/metropolis-fonts.css" rel="stylesheet" />
+    <link href="libs/font-awesome-5.3.1/css/fontawesome-all.min.css" rel="stylesheet" />
   </head>
   <body>
     <textarea id="source">
@@ -23,7 +24,6 @@ class: center, middle, inverse, title-slide
 &lt;div class="hdm"&gt;&lt;/div&gt;
 
 # Agenda
-
 
 - Zielsetzung der Arbeit
 - Aufbau der Projektarbeit
@@ -710,6 +710,8 @@ tb_text &lt;- anti_join(token_text, all_stopword, by = 'word')
   - Publikation
   - Parteien
 
+--
+
 
 ```r
 # Durchsuchen der Artikel nach eines Partei
@@ -975,7 +977,7 @@ ggplot(data=senti_all, aes(x = jahr, y = senti_sum, fill = src )) +
 - Dynamisches Minimum und Maximum der Token
 - Deployment über ShinyApps - [http://hdm-shiny.think-data.de/](http://hdm-shiny.think-data.de/)
   
-**Unzureichende Performance**
+<i class="fas  fa-spinner fa-spin "></i> **Unzureichende Performance**
 - Reduzierung der Tokenlisten
 - Caching der Token
 

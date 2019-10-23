@@ -8,6 +8,7 @@ output:
     css: [default, metropolis, metropolis-fonts]
     lib_dir: libs
     nature:
+      #ratio: "16:9"
       highlightStyle: github
       highlightLines: true
       countIncrementalSlides: false
@@ -21,7 +22,6 @@ output:
 <div class="hdm"></div>
 
 # Agenda
-
 
 - Zielsetzung der Arbeit
 - Aufbau der Projektarbeit
@@ -696,6 +696,8 @@ tb_text <- anti_join(token_text, all_stopword, by = 'word')
   - Publikation
   - Parteien
 
+--
+
 ```{r, eval=FALSE}
 # Durchsuchen der Artikel nach eines Partei
 article_patei_linke_count <- tb_text %>% 
@@ -953,7 +955,7 @@ ggplot(data=senti_all, aes(x = jahr, y = senti_sum, fill = src )) +
 - Dynamisches Minimum und Maximum der Token
 - Deployment über ShinyApps - [http://hdm-shiny.think-data.de/](http://hdm-shiny.think-data.de/)
   
-**Unzureichende Performance**
+`r icon::fa("spinner", size = 1, animate = "spin")` **Unzureichende Performance**
 - Reduzierung der Tokenlisten
 - Caching der Token
 
